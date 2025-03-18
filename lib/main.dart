@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'TrangChu.dart';
+import 'dangnhap.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Quản lý khách thuê trọ',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: DashboardScreen(),
+      home: LoginPage(),
     );
   }
 }

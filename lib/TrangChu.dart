@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'QuanLyPhongVaCoSo.dart';
 import 'QuanLyKhach.dart';
+import 'dashboard.dart';
 
 class DashboardScreen extends StatelessWidget {
   @override
@@ -20,7 +21,12 @@ class DashboardScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.home),
               title: Text('Dashboard'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DashboardScreen()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.apartment),
@@ -59,12 +65,7 @@ class DashboardScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Center(
-        child: Text(
-          'Chào mừng đến với hệ thống quản lý khách thuê trọ!',
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
+      body: DashboardPage(),
     );
   }
 }

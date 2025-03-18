@@ -29,31 +29,6 @@ class DashboardPage extends StatelessWidget {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Expanded(
-              child: LineChart(
-                LineChartData(
-                  gridData: FlGridData(show: false),
-                  titlesData: FlTitlesData(show: false),
-                  borderData: FlBorderData(show: false),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: [
-                        FlSpot(0, 3),
-                        FlSpot(1, 2),
-                        FlSpot(2, 5),
-                        FlSpot(3, 3.5),
-                        FlSpot(4, 4),
-                        FlSpot(5, 6),
-                      ],
-                      isCurved: true,
-                      color: Colors.blue,
-                      barWidth: 4,
-                      isStrokeCapRound: true,
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),

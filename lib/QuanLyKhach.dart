@@ -1,36 +1,37 @@
 import 'package:flutter/material.dart';
+import 'model/khachhang.dart';
 
-class TenantManagementScreen extends StatefulWidget {
+class QLKhachHang extends StatefulWidget {
   @override
-  _TenantManagementScreenState createState() => _TenantManagementScreenState();
+  _QLKhachHangState createState() => _QLKhachHangState();
 }
 
-class _TenantManagementScreenState extends State<TenantManagementScreen> {
-  final List<Map<String, dynamic>> tenants = [
-    {'name': 'Nguyễn Văn A', 'room': '101', 'status': 'Đang thuê'},
-    {'name': 'Trần Thị B', 'room': '102', 'status': 'Đã rời đi'},
-    {'name': 'Lê Văn C', 'room': '103', 'status': 'Đang thuê'},
+class _QLKhachHangState extends State<QLKhachHang> {
+  final List<Tenant> tenants = [
+    Tenant(name: 'Nguyễn Văn A', room: '101', status: 'Đang thuê'),
+    Tenant(name: 'Trần Thị B', room: '102', status: 'Đã rời đi'),
+    Tenant(name: 'Lê Văn C', room: '103', status: 'Đang thuê'),
   ];
 
   String _searchQuery = "";
 
-  List<Map<String, dynamic>> get _filteredTenants {
+  List<Tenant> get _filteredTenants {
     if (_searchQuery.isEmpty) {
       return tenants;
     }
     return tenants
-        .where((tenant) => tenant['name'].toLowerCase().contains(_searchQuery))
+        .where((tenant) => tenant.name.toLowerCase().contains(_searchQuery))
         .toList();
   }
 
-  void _showTenantDialog({Map<String, dynamic>? tenant}) {
+  void _showTenantDialog({Tenant? tenant}) {
     TextEditingController nameController = TextEditingController(
-      text: tenant?['name'] ?? '',
+      text: tenant?.name ?? '',
     );
     TextEditingController roomController = TextEditingController(
-      text: tenant?['room'] ?? '',
+      text: tenant?.room ?? '',
     );
-    String status = tenant?['status'] ?? 'Đang thuê';
+    String status = tenant?.status ?? 'Đang thuê';
 
     showDialog(
       context: context,
@@ -55,7 +56,7 @@ class _TenantManagementScreenState extends State<TenantManagementScreen> {
                 value: status,
                 decoration: InputDecoration(labelText: 'Trạng thái'),
                 items:
-                    ['Đang thuê']
+                    ['Đang thuê', 'Đã rời đi']
                         .map(
                           (status) => DropdownMenuItem(
                             value: status,
@@ -78,15 +79,17 @@ class _TenantManagementScreenState extends State<TenantManagementScreen> {
               onPressed: () {
                 setState(() {
                   if (tenant == null) {
-                    tenants.add({
-                      'name': nameController.text,
-                      'room': roomController.text,
-                      'status': status,
-                    });
+                    tenants.add(
+                      Tenant(
+                        name: nameController.text,
+                        room: roomController.text,
+                        status: status,
+                      ),
+                    );
                   } else {
-                    tenant['name'] = nameController.text;
-                    tenant['room'] = roomController.text;
-                    tenant['status'] = status;
+                    tenant.name = nameController.text;
+                    tenant.room = roomController.text;
+                    tenant.status = status;
                   }
                 });
                 Navigator.pop(context);
@@ -101,8 +104,18 @@ class _TenantManagementScreenState extends State<TenantManagementScreen> {
 
   void _markTenantAsLeft(int index) {
     setState(() {
-      tenants[index]['status'] = 'Đã rời đi';
+      tenants[index].status = 'Đã rời đi';
     });
+  }
+
+  Widget a(Tenant tenant, int index) {
+    if (tenant.status == 'Đang thuê') {
+      return IconButton(
+        icon: Icon(Icons.close, color: Colors.red),
+        onPressed: () => _markTenantAsLeft(index),
+      );
+    }
+    return SizedBox.shrink();
   }
 
   @override
@@ -134,23 +147,24 @@ class _TenantManagementScreenState extends State<TenantManagementScreen> {
                 return Card(
                   margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: ListTile(
-                    title: Text(tenant['name']),
-                    subtitle: Text("Phòng: ${tenant['room']}"),
+                    title: Text(tenant.name),
+                    subtitle: Text("Phòng: ${tenant.room}"),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          tenant['status'],
+                          tenant.status,
                           style: TextStyle(
                             color:
-                                tenant['status'] == 'Đang thuê'
-                                    ? const Color.fromARGB(255, 96, 196, 100)
+                                tenant.status == 'Đang thuê'
+                                    ? Colors.green
                                     : Colors.red,
                           ),
                         ),
-                        if (tenant['status'] == 'Đang thuê')
+                        if (tenant.status == 'Đang thuê')
                           IconButton(
                             icon: Icon(Icons.close, color: Colors.red),
+
                             onPressed: () => _markTenantAsLeft(index),
                           ),
                       ],

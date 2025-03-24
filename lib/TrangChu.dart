@@ -51,10 +51,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               leading: Icon(Icons.home),
               title: Text('Dashboard'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TrangDashboard()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => TrangDashboard()),
+                // );
+                Navigator.pop(context);
               },
             ),
             ListTile(

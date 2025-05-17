@@ -1,12 +1,16 @@
+import 'package:buoi03/view/DangNhapDangKyChu/dangnhap.dart';
+
 import 'TroChuyen.dart';
 import 'package:flutter/material.dart';
-import 'QuanLyPhongVaCoSo.dart';
-import 'QuanLyKhach.dart';
-import 'ThongKe.dart';
+import 'view/QuanLy/QuanLyCoSo.dart';
+import 'view/QuanLy/QuanLyKhach.dart';
+import 'view/ThongKe/ThongKe.dart';
 import 'dashboard.dart';
-import 'QuanLyHoaDon.dart';
+import 'view/QuanLy/QuanLyHoaDon.dart';
 
 class DashboardScreen extends StatefulWidget {
+  final int idChu;
+  DashboardScreen({required this.idChu});
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -14,9 +18,9 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
-    TrangDashboard(),
-    TrangDashboard(),
+  late List<Widget> _widgetOptions = <Widget>[
+    TrangDashboard(idChu: widget.idChu),
+    TrangDashboard(idChu: widget.idChu),
     TrangChat(),
   ];
 
@@ -36,7 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
               accountName: Text(
-                'Hi Khoa',
+                'Hi',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               accountEmail: Text(
@@ -64,7 +68,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DSCoSoVaPhong()),
+                  MaterialPageRoute(
+                    builder: (context) => DSCoSoVaPhong(idChu: widget.idChu),
+                  ),
                 );
               },
             ),
@@ -74,7 +80,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => QLKhachHang()),
+                  MaterialPageRoute(
+                    builder: (context) => QLKhachHang(idChu: widget.idChu),
+                  ),
                 );
               },
             ),
@@ -94,7 +102,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Thongke()),
+                  MaterialPageRoute(
+                    builder: (context) => Thongke(idChuu: widget.idChu),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Đăng xuất'),
+              onTap: () {
+                // Xử lý đăng xuất ở đây
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  (route) => false, // Xóa tất cả các route trước đó
                 );
               },
             ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'model/hoadon.dart';
+import '../../model/hoadon.dart';
 
 class QLHoaDon extends StatelessWidget {
   final List<Invoice> invoices = [

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,12 +31,17 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
     GetCoSo();
   }
 
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
+
   Future<void> GetCoSo() async {
     try {
       final response = await http.get(
-        Uri.parse(
-          'http://localhost:5167/api/QLCoSoVaPhong/GetCoSo/${widget.idChu}',
-        ),
+        Uri.parse("${getUrl()}/api/QLCoSoVaPhong/GetCoSo/${widget.idChu}"),
       );
       await Future.delayed(Duration(seconds: 2));
       print(response.statusCode);
@@ -67,7 +73,7 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
       if (formKey.currentState!.validate()) {
         final response = await http.post(
           Uri.parse(
-            "http://localhost:5167/api/QLCoSoVaPhong/ThemCoSo/${widget.idChu}",
+            "${getUrl()}/api/QLCoSoVaPhong/ThemCoSo/${widget.idChu}", //"http://localhost:5167/api/QLCoSoVaPhong/ThemCoSo/${widget.idChu}",
           ),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({
@@ -171,7 +177,8 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
   Future<void> deleteCoSo(int id) async {
     try {
       final response = await http.delete(
-        Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/XoaCoSo/${id}"),
+        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/XoaCoSo/${id}"),
+        Uri.parse("${getUrl()}/api/QLCoSoVaPhong/XoaCoSo/${id}"),
         headers: {"Content-Type": "application/json"},
       );
       body:
@@ -276,7 +283,8 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
   Future<void> capNhatCoSo(int id) async {
     try {
       final response = await http.put(
-        Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/CapNhatCoSo/${id}"),
+        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/CapNhatCoSo/${id}"),
+        Uri.parse("${getUrl()}/api/QLCoSoVaPhong/CapNhatCoSo/${id}"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "TenCoSo": tenCoSoController.text,

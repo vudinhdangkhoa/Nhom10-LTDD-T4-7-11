@@ -1,5 +1,6 @@
 import 'package:buoi03/model/phong.dart';
 import 'package:buoi03/view/QuanLy/ChiTietPhong.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -26,11 +27,19 @@ class _QuanLyPhongState extends State<DSPhong> {
     getPhong();
   }
 
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
+
   Future<void> addPhong() async {
     try {
       final response = await http.post(
+        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/ThemPhong/${widget.coSo.idCoSo}",),
         Uri.parse(
-          "http://localhost:5167/api/QLCoSoVaPhong/ThemPhong/${widget.coSo.idCoSo}",
+          "${getUrl()}/api/QLCoSoVaPhong/ThemPhong/${widget.coSo.idCoSo}",
         ),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"tenPhong": tenPhongController.text}),
@@ -77,8 +86,9 @@ class _QuanLyPhongState extends State<DSPhong> {
   Future<void> getPhong() async {
     try {
       final response = await http.get(
+        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/GetPhong/${widget.coSo.idCoSo}",),
         Uri.parse(
-          "http://localhost:5167/api/QLCoSoVaPhong/GetPhong/${widget.coSo.idCoSo}",
+          "${getUrl()}/api/QLCoSoVaPhong/GetPhong/${widget.coSo.idCoSo}",
         ),
         headers: {"Content-Type": "application/json"},
       );
@@ -117,7 +127,8 @@ class _QuanLyPhongState extends State<DSPhong> {
   Future<void> deletePhong(int idPhong) async {
     try {
       final response = await http.delete(
-        Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/XoaPhong/$idPhong"),
+        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/XoaPhong/$idPhong"),
+        Uri.parse("${getUrl()}/api/QLCoSoVaPhong/XoaPhong/$idPhong"),
         headers: {"Content-Type": "application/json"},
       );
       Future.delayed(Duration(seconds: 2));
@@ -231,9 +242,8 @@ class _QuanLyPhongState extends State<DSPhong> {
   Future<void> updatePhong(int idPhong) async {
     try {
       final response = await http.put(
-        Uri.parse(
-          "http://localhost:5167/api/QLCoSoVaPhong/CapNhatPhong/$idPhong",
-        ),
+        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/CapNhatPhong/$idPhong",),
+        Uri.parse("${getUrl()}/api/QLCoSoVaPhong/CapNhatPhong/$idPhong"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"tenPhong": tenPhongController.text}),
       );

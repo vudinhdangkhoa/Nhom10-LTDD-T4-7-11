@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,6 +38,14 @@ class _DangkyScreenState extends State<DangkyScreen> {
   final check = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _isHide = true;
+
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
+
   Future<void> _register() async {
     if (check.currentState!.validate()) {
       setState(() {
@@ -46,7 +55,7 @@ class _DangkyScreenState extends State<DangkyScreen> {
         // Perform registration logic here
         // For example, send data to your backend or API
         final respone = await http.post(
-          Uri.parse('http://localhost:5167/api/dangnhap/DangKyChu'),
+          Uri.parse('${getUrl()}/api/dangnhap/DangKyChu'),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({
             "ten": tenController.text,

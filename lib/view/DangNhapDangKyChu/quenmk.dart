@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -22,6 +23,13 @@ class _QuenmkState extends State<Quenmk> {
   bool _isCodeVisible = false;
   bool _isConfirmPasswordVisible = false;
 
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
+
   Future<void> CapLaiMatKhau() async {
     if (_codeFormKey.currentState!.validate()) {
       setState(() {
@@ -29,9 +37,7 @@ class _QuenmkState extends State<Quenmk> {
       });
       try {
         final response = await http.get(
-          Uri.parse(
-            'http://localhost:5167/api/dangnhap/XacThuc/${_codeController.text}',
-          ),
+          Uri.parse('${getUrl()}/api/dangnhap/XacThuc/${_codeController.text}'),
           headers: {"Content-Type": "application/json"},
         );
         print(response.statusCode);

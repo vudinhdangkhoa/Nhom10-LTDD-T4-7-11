@@ -104,7 +104,7 @@ class _DangnhapState extends State<Dangnhap> {
                 TextFormField(
                   controller: taikhoan,
                   decoration: InputDecoration(
-                    labelText: "Email/CCCD",
+                    labelText: "Email",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

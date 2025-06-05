@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
@@ -35,12 +36,20 @@ class _ScreenThongKeState extends State<ScreenThongKe> {
     GetSLPhongVaKH();
   }
 
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
+
   Future<void> GetSLPhongVaKH() async {
     try {
       final response = await http.get(
-        Uri.parse(
-          'http://localhost:5167/api/ThongKeKhach/GetKhach/${widget.idChuu}',
-        ),
+        // Uri.parse(
+        //   'http://localhost:5167/api/ThongKeKhach/GetKhach/${widget.idChuu}',
+        // ),
+        Uri.parse("${getUrl()}/api/ThongKeKhach/GetKhach/${widget.idChuu}"),
       );
 
       print(response.statusCode);

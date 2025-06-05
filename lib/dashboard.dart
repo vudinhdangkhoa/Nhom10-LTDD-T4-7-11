@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'view/ThongKe/ThongKe.dart';
@@ -28,13 +29,18 @@ class _DashboardState extends State<TrangDashboard> {
     GetPhongvaKhach();
   }
 
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
+
   Future<void> GetPhongvaKhach() async {
     // Simulate a network call
     try {
       final response = await http.get(
-        Uri.parse(
-          "http://localhost:5167/api/TrangChu/GetPhongvaKhach/${widget.idChu}",
-        ),
+        Uri.parse("${getUrl()}/api/TrangChu/GetPhongvaKhach/${widget.idChu}"),
         headers: {"Content-Type": "application/json"},
       );
       await Future.delayed(Duration(seconds: 2));
@@ -181,7 +187,7 @@ class _DashboardState extends State<TrangDashboard> {
                           "Quản lý hóa đơn",
                           Icons.room_service,
                           Colors.orange,
-                          QLHoaDon(),
+                          QLHoaDon(idChu: widget.idChu),
                         ),
                         _buildGridItem(
                           context,

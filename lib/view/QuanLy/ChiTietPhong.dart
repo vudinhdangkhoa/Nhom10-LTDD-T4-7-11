@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -19,12 +20,18 @@ class _ChiTietPhongState extends State<ChiTietPhong> {
   late List<Map<String, dynamic>> khachThueList = [];
   String erroMessage = "";
   bool isLoading = true;
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
 
   Future<void> getInfoPhong() async {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://localhost:5167/api/QLCoSoVaPhong/getInfoPhong/${widget.idPhong}",
+          "${getUrl()}/api/QLCoSoVaPhong/getInfoPhong/${widget.idPhong}",
         ),
         headers: {"Content-Type": "application/json"},
       );
@@ -116,6 +123,7 @@ class _ChiTietPhongState extends State<ChiTietPhong> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      SizedBox(height: 10),
                       Expanded(
                         child:
                             erroMessage.isEmpty

@@ -1,4 +1,5 @@
 import 'package:buoi03/model/phong.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../model/coso.dart';
 import '../../model/khachhang.dart';
@@ -267,9 +268,17 @@ class _QLKhachHangState extends State<QLKhachHang> {
     });
   }
 
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
+
   Future<void> GetKhach() async {
     final response = await http.get(
-      Uri.parse("http://localhost:5167/api/QuanLyKH/GetKhach/${widget.idChu}"),
+      //Uri.parse("http://localhost:5167/api/QuanLyKH/GetKhach/${widget.idChu}"),
+      Uri.parse("${getUrl()}/api/QuanLyKH/GetKhach/${widget.idChu}"),
       headers: {"Content-Type": "application/json"},
     );
     Future.delayed(Duration(seconds: 2));
@@ -402,9 +411,8 @@ class _QLKhachHangState extends State<QLKhachHang> {
 
   Future<void> _markTenantAsLeft(int index) async {
     final response = await http.put(
-      Uri.parse(
-        "http://localhost:5167/api/QuanLyKH/deleteKhach/${lstKH[index].idKh}",
-      ),
+      //Uri.parse("http://localhost:5167/api/QuanLyKH/deleteKhach/${lstKH[index].idKh}",),
+      Uri.parse("${getUrl()}/api/QuanLyKH/deleteKhach/${lstKH[index].idKh}"),
       headers: {"Content-Type": "application/json"},
     );
 
@@ -537,7 +545,8 @@ class _QLKhachHangState extends State<QLKhachHang> {
 
   Future<void> themKH() async {
     final response = await http.post(
-      Uri.parse("http://localhost:5167/api/QuanLyKH/ThemKhach/${idphong}"),
+      //Uri.parse("http://localhost:5167/api/QuanLyKH/ThemKhach/${idphong}"),
+      Uri.parse("${getUrl()}/api/QuanLyKH/ThemKhach/${idphong}"),
       headers: {"Content-Type": "application/json"},
       body: json.encode({
         "tenKh": _nameController.text,

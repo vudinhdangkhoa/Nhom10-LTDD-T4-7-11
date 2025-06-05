@@ -21,9 +21,9 @@ class _QuanLyPhongState extends State<DSPhong> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<FormState> formkeyCapNhatPhong = GlobalKey<FormState>();
   TextEditingController tenPhongController = TextEditingController();
+  
   void initState() {
     super.initState();
-    // Gọi API để lấy danh sách phòng
     getPhong();
   }
 
@@ -37,7 +37,6 @@ class _QuanLyPhongState extends State<DSPhong> {
   Future<void> addPhong() async {
     try {
       final response = await http.post(
-        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/ThemPhong/${widget.coSo.idCoSo}",),
         Uri.parse(
           "${getUrl()}/api/QLCoSoVaPhong/ThemPhong/${widget.coSo.idCoSo}",
         ),
@@ -48,10 +47,16 @@ class _QuanLyPhongState extends State<DSPhong> {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              "Thêm thành công",
-              style: TextStyle(color: Colors.green),
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text("Thêm thành công"),
+              ],
             ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         );
         setState(() {
@@ -65,10 +70,16 @@ class _QuanLyPhongState extends State<DSPhong> {
           setState(() {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  jsonDecode(response.body)['message'],
-                  style: TextStyle(color: Colors.red),
+                content: Row(
+                  children: [
+                    Icon(Icons.error, color: Colors.white),
+                    SizedBox(width: 8),
+                    Flexible(child: Text(jsonDecode(response.body)['message'])),
+                  ],
                 ),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
             );
             isLoading = false;
@@ -86,7 +97,6 @@ class _QuanLyPhongState extends State<DSPhong> {
   Future<void> getPhong() async {
     try {
       final response = await http.get(
-        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/GetPhong/${widget.coSo.idCoSo}",),
         Uri.parse(
           "${getUrl()}/api/QLCoSoVaPhong/GetPhong/${widget.coSo.idCoSo}",
         ),
@@ -127,7 +137,6 @@ class _QuanLyPhongState extends State<DSPhong> {
   Future<void> deletePhong(int idPhong) async {
     try {
       final response = await http.delete(
-        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/XoaPhong/$idPhong"),
         Uri.parse("${getUrl()}/api/QLCoSoVaPhong/XoaPhong/$idPhong"),
         headers: {"Content-Type": "application/json"},
       );
@@ -135,10 +144,16 @@ class _QuanLyPhongState extends State<DSPhong> {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              "Xóa thành công",
-              style: TextStyle(color: Colors.green),
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text("Xóa thành công"),
+              ],
             ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         );
         isLoading = true;
@@ -149,10 +164,16 @@ class _QuanLyPhongState extends State<DSPhong> {
           setState(() {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  jsonDecode(response.body)['message'],
-                  style: TextStyle(color: Colors.red),
+                content: Row(
+                  children: [
+                    Icon(Icons.error, color: Colors.white),
+                    SizedBox(width: 8),
+                    Flexible(child: Text(jsonDecode(response.body)['message'])),
+                  ],
                 ),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
             );
             isLoading = false;
@@ -172,17 +193,39 @@ class _QuanLyPhongState extends State<DSPhong> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Xóa phòng'),
-          content: Text('Bạn có chắc chắn muốn xóa phòng này không?'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Row(
+            children: [
+              Icon(Icons.warning, color: Colors.orange, size: 28),
+              SizedBox(width: 12),
+              Text(
+                'Xóa phòng',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          content: Text(
+            'Bạn có chắc chắn muốn xóa phòng này không?',
+            style: TextStyle(fontSize: 16),
+          ),
           actions: [
             TextButton(
-              child: Text('Hủy'),
+              child: Text(
+                'Hủy',
+                style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w600),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            TextButton(
+            ElevatedButton(
               child: Text('Xóa'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
               onPressed: () {
                 deletePhong(idPhong);
               },
@@ -202,12 +245,32 @@ class _QuanLyPhongState extends State<DSPhong> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Cập nhật thông tin phòng'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Row(
+            children: [
+              Icon(Icons.edit, color: Colors.blue, size: 28),
+              SizedBox(width: 12),
+              Text(
+                'Cập nhật thông tin phòng',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
           content: Form(
             key: formkeyCapNhatPhong,
             child: TextFormField(
               controller: tenPhongController,
-              decoration: InputDecoration(labelText: 'Tên phòng'),
+              decoration: InputDecoration(
+                labelText: 'Tên phòng',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                prefixIcon: Icon(Icons.room),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.blue, width: 2),
+                ),
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Vui lòng nhập tên phòng';
@@ -216,18 +279,25 @@ class _QuanLyPhongState extends State<DSPhong> {
               },
             ),
           ),
-
           actions: [
             TextButton(
-              child: Text('Hủy'),
+              child: Text(
+                'Hủy',
+                style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w600),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            TextButton(
+            ElevatedButton(
               child: Text('Cập nhật'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
               onPressed: () {
-                // Cập nhật thông tin phòng
                 tenPhongCu != tenPhongController.text
                     ? updatePhong(idPhong)
                     : Navigator.of(context).pop();
@@ -242,7 +312,6 @@ class _QuanLyPhongState extends State<DSPhong> {
   Future<void> updatePhong(int idPhong) async {
     try {
       final response = await http.put(
-        //Uri.parse("http://localhost:5167/api/QLCoSoVaPhong/CapNhatPhong/$idPhong",),
         Uri.parse("${getUrl()}/api/QLCoSoVaPhong/CapNhatPhong/$idPhong"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"tenPhong": tenPhongController.text}),
@@ -251,10 +320,16 @@ class _QuanLyPhongState extends State<DSPhong> {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              "Cập nhật thành công",
-              style: TextStyle(color: Colors.green),
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text("Cập nhật thành công"),
+              ],
             ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         );
         tenPhongController.clear();
@@ -267,10 +342,16 @@ class _QuanLyPhongState extends State<DSPhong> {
           setState(() {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  jsonDecode(response.body)['message'],
-                  style: TextStyle(color: Colors.red),
+                content: Row(
+                  children: [
+                    Icon(Icons.error, color: Colors.white),
+                    SizedBox(width: 8),
+                    Flexible(child: Text(jsonDecode(response.body)['message'])),
+                  ],
                 ),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
             );
             isLoading = false;
@@ -279,10 +360,16 @@ class _QuanLyPhongState extends State<DSPhong> {
           setState(() {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  "Lỗi không xác định",
-                  style: TextStyle(color: Colors.red),
+                content: Row(
+                  children: [
+                    Icon(Icons.error, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text("Lỗi không xác định"),
+                  ],
                 ),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
             );
           });
@@ -295,121 +382,329 @@ class _QuanLyPhongState extends State<DSPhong> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Danh sách phòng - ${widget.coSo.tenCoSo}')),
-      body:
-          isLoading
-              ? Center(child: CircularProgressIndicator())
-              : erroMessage.isNotEmpty
-              ? Center(child: Text(erroMessage))
-              : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ListView.builder(
-                  itemCount: phongList.length,
-                  itemBuilder: (context, index) {
-                    final Phong phong = phongList[index];
-                    return Card(
-                      elevation: 4,
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: ListTile(
-                        title: Text(
-                          phong.tenPhong ?? 'Phòng ${phong.idPhong}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          phong.soLuong > 0
-                              ? 'Đã cho thuê - Số lượng người: ${phong.soLuong}'
-                              : 'Còn trống',
-                          style: TextStyle(
-                            color:
-                                phong.soLuong == 0 ? Colors.red : Colors.green,
-                          ),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () {
-                                // Thêm chức năng chỉnh sửa phòng
-                                tenPhongController.text = phong.tenPhong!;
-                                _showdialogDetail(
-                                  phong.idPhong,
-                                  tenPhongController,
-                                  tenPhongController.text,
-                                );
-                              },
-                            ),
-                            phong.soLuong > 0
-                                ? IconButton(
-                                  icon: Icon(Icons.delete, color: Colors.grey),
-                                  onPressed: null,
-                                )
-                                : IconButton(
-                                  icon: Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () {
-                                    _showdialogDelete(phong.idPhong);
-                                  },
-                                ),
-                          ],
-                        ),
-                        onTap: () {
-                          // Thêm chức năng xem chi tiết phòng
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      ChiTietPhong(idPhong: phong.idPhong),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          // Thêm chức năng thêm phòng
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Thêm phòng'),
-                content: Form(
-                  key: formKey,
-                  child: TextFormField(
-                    controller: tenPhongController,
-                    decoration: InputDecoration(labelText: 'Tên phòng'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Vui lòng nhập tên phòng';
-                      }
-                      return null;
-                    },
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        title: Text(
+          'Danh sách phòng - ${widget.coSo.tenCoSo}',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.indigo[600],
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      body: isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.indigo),
                   ),
-                ),
-                actions: [
-                  TextButton(
-                    child: Text('Hủy'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: Text('Thêm'),
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        addPhong();
-                      }
-                    },
+                  SizedBox(height: 16),
+                  Text(
+                    "Đang tải danh sách phòng...",
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 16,
+                    ),
                   ),
                 ],
-              );
-            },
-          );
-        },
+              ),
+            )
+          : erroMessage.isNotEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.inbox,
+                        size: 80,
+                        color: Colors.grey[400],
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        erroMessage,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: getPhong,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ListView.builder(
+                      itemCount: phongList.length,
+                      itemBuilder: (context, index) {
+                        final Phong phong = phongList[index];
+                        bool isOccupied = phong.soLuong > 0;
+                        
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ChiTietPhong(idPhong: phong.idPhong),
+                                ),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(16),
+                            child: Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  // Icon phòng
+                                  Container(
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: isOccupied 
+                                          ? Colors.green[50] 
+                                          : Colors.red[50],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(
+                                      Icons.room,
+                                      color: isOccupied 
+                                          ? Colors.green[600] 
+                                          : Colors.red[600],
+                                      size: 24,
+                                    ),
+                                  ),
+                                  SizedBox(width: 16),
+                                  
+                                  // Thông tin phòng
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                                                                Text(
+                                          phong.tenPhong ?? 'Phòng ${phong.idPhong}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: Colors.grey[800],
+                                          ),
+                                        ),
+                                        SizedBox(height: 6),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 4,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: isOccupied 
+                                                    ? Colors.green[100] 
+                                                    : Colors.red[100],
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              child: Text(
+                                                isOccupied 
+                                                    ? 'Đã cho thuê' 
+                                                    : 'Còn trống',
+                                                style: TextStyle(
+                                                  color: isOccupied 
+                                                      ? Colors.green[700] 
+                                                      : Colors.red[700],
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                            if (isOccupied) ...[
+                                              SizedBox(width: 8),
+                                              Text(
+                                                '${phong.soLuong} người',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  
+                                  // Action buttons
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue[50],
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: IconButton(
+                                          icon: Icon(Icons.edit, color: Colors.blue[600]),
+                                          onPressed: () {
+                                            tenPhongController.text = phong.tenPhong!;
+                                            _showdialogDetail(
+                                              phong.idPhong,
+                                              tenPhongController,
+                                              tenPhongController.text,
+                                            );
+                                          },
+                                          tooltip: 'Chỉnh sửa',
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: isOccupied 
+                                              ? Colors.grey[100] 
+                                              : Colors.red[50],
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.delete,
+                                            color: isOccupied 
+                                                ? Colors.grey[400] 
+                                                : Colors.red[600],
+                                          ),
+                                          onPressed: isOccupied 
+                                              ? null 
+                                              : () {
+                                                  _showdialogDelete(phong.idPhong);
+                                                },
+                                          tooltip: isOccupied 
+                                              ? 'Không thể xóa phòng đã có khách' 
+                                              : 'Xóa phòng',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.indigo.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  title: Row(
+                    children: [
+                      Icon(Icons.add_circle, color: Colors.indigo, size: 28),
+                      SizedBox(width: 12),
+                      Text(
+                        'Thêm phòng mới',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  content: Form(
+                    key: formKey,
+                    child: TextFormField(
+                      controller: tenPhongController,
+                      decoration: InputDecoration(
+                        labelText: 'Tên phòng',
+                        hintText: 'Nhập tên phòng...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        prefixIcon: Icon(Icons.room),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.indigo, width: 2),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vui lòng nhập tên phòng';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      child: Text(
+                        'Hủy',
+                        style: TextStyle(
+                          color: Colors.grey[600], 
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    ElevatedButton(
+                      child: Text('Thêm'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.indigo,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      ),
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          addPhong();
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          backgroundColor: Colors.indigo[600],
+          icon: Icon(Icons.add, color: Colors.white),
+          label: Text(
+            'Thêm phòng',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -31,57 +31,91 @@ class __buildropdownState extends State<_buildropdown> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DropdownButtonFormField<int>(
-          value: widget.idcoso == 0 ? null : widget.idcoso,
-          hint: Text("Chọn cơ sở"),
-          items:
-              widget.lstCoSo
-                  .map(
-                    (u) => DropdownMenuItem(
-                      child: Text(u.tenCoSo),
-                      value: u.idCoSo,
-                    ),
-                  )
-                  .toList(),
-          onChanged: (value) {
-            setState(() {
-              widget.idcoso = value!;
-              widget.idphong = null;
-            });
-          },
-          validator: (value) {
-            if (value == null) {
-              return 'Vui lòng chọn cơ sở';
-            }
-            return null;
-          },
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: DropdownButtonFormField<int>(
+            value: widget.idcoso == 0 ? null : widget.idcoso,
+            hint: Text("Chọn cơ sở", style: TextStyle(color: Colors.grey.shade600)),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+            items: widget.lstCoSo
+                .map(
+                  (u) => DropdownMenuItem(
+                    child: Text(u.tenCoSo, style: TextStyle(fontSize: 16)),
+                    value: u.idCoSo,
+                  ),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                widget.idcoso = value!;
+                widget.idphong = null;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Vui lòng chọn cơ sở';
+              }
+              return null;
+            },
+          ),
         ),
-        SizedBox(height: 16),
-        DropdownButtonFormField<int>(
-          value: widget.idphong,
-          hint: Text("Chọn phòng"),
-          items:
-              widget.lstPhong
-                  .where((u) => u.idCoSo == widget.idcoso)
-                  .map(
-                    (u) => DropdownMenuItem(
-                      child: Text(u.tenPhong ?? 'Không tên'),
-                      value: u.idPhong,
-                    ),
-                  )
-                  .toList(),
-          onChanged: (value) {
-            setState(() {
-              widget.idphong = value!;
-              widget.updateIdPhong(value);
-            });
-          },
-          validator: (value) {
-            if (value == null) {
-              return 'Vui lòng chọn phòng';
-            }
-            return null;
-          },
+        SizedBox(height: 20),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: DropdownButtonFormField<int>(
+            value: widget.idphong,
+            hint: Text("Chọn phòng", style: TextStyle(color: Colors.grey.shade600)),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+            items: widget.lstPhong
+                .where((u) => u.idCoSo == widget.idcoso)
+                .map(
+                  (u) => DropdownMenuItem(
+                    child: Text(u.tenPhong ?? 'Không tên', style: TextStyle(fontSize: 16)),
+                    value: u.idPhong,
+                  ),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                widget.idphong = value!;
+                widget.updateIdPhong(value);
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Vui lòng chọn phòng';
+              }
+              return null;
+            },
+          ),
         ),
       ],
     );
@@ -97,6 +131,7 @@ class _buildFilterBar extends StatefulWidget {
   List<KhachHang> lstKH;
   Function(List<KhachHang>) updateLstKHFilter;
   Function(int?) updateIdCoSo;
+  
   _buildFilterBar({
     Key? key,
     required this.idcoso,
@@ -116,62 +151,108 @@ class _buildFilterBar extends StatefulWidget {
 class __buildFilterBarState extends State<_buildFilterBar> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3.0),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          spacing: 3,
-          children: [
-            // Filter by Status
-
-            // Filter by Facility
-            DropdownButton<int?>(
-              value: widget.idcoso,
-              hint: Text("Chọn cơ sở"),
-              items:
-                  widget.lstCoSo
-                      .map(
-                        (coSo) => DropdownMenuItem(
-                          value: coSo.idCoSo,
-                          child: Text(coSo.tenCoSo),
-                        ),
-                      )
-                      .toList(),
-              onChanged: (value) {
-                setState(() {
-                  widget.idcoso = value;
-                });
-              },
+    return Container(
+      margin: EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Bộ lọc",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade800,
             ),
-
-            // Filter by Room
-            DropdownButton<int?>(
-              value: widget.idphong,
-              hint: Text("Chọn phòng"),
-              items:
-                  widget.lstPhong
-                      .where((phong) => phong.idCoSo == widget.idcoso)
-                      .map(
-                        (phong) => DropdownMenuItem(
-                          value: phong.idPhong,
-                          child: Text(phong.tenPhong ?? 'Không tên'),
-                        ),
-                      )
-                      .toList(),
-              onChanged: (value) {
-                setState(() {
-                  widget.idphong = value;
-                });
-              },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  // Lọc danh sách khách hàng
-                  widget.lstKH =
-                      widget.lstKH
+          ),
+          SizedBox(height: 16),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Container(
+                  width: 180,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: DropdownButton<int?>(
+                    value: widget.idcoso,
+                    hint: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Text("Chọn cơ sở", style: TextStyle(color: Colors.grey.shade600)),
+                    ),
+                    isExpanded: true,
+                    underline: SizedBox(),
+                    items: widget.lstCoSo
+                        .map(
+                          (coSo) => DropdownMenuItem(
+                            value: coSo.idCoSo,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(coSo.tenCoSo),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        widget.idcoso = value;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 12),
+                Container(
+                  width: 180,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: DropdownButton<int?>(
+                    value: widget.idphong,
+                    hint: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Text("Chọn phòng", style: TextStyle(color: Colors.grey.shade600)),
+                    ),
+                    isExpanded: true,
+                    underline: SizedBox(),
+                    items: widget.lstPhong
+                        .where((phong) => phong.idCoSo == widget.idcoso)
+                        .map(
+                          (phong) => DropdownMenuItem(
+                            value: phong.idPhong,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(phong.tenPhong ?? 'Không tên'),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        widget.idphong = value;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 12),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      widget.lstKH = widget.lstKH
                           .where(
                             (tenant) =>
                                 (widget.idcoso == null ||
@@ -180,27 +261,48 @@ class __buildFilterBarState extends State<_buildFilterBar> {
                                     tenant.idPhong == widget.idphong),
                           )
                           .toList();
-                  widget.updateLstKHFilter(widget.lstKH);
-                });
-              },
-              child: Text("Lọc"),
+                      widget.updateLstKHFilter(widget.lstKH);
+                    });
+                  },
+                  icon: Icon(Icons.filter_list, size: 20),
+                  label: Text("Lọc"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade600,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                ),
+                SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      widget.idcoso = null;
+                      widget.idphong = null;
+                      widget.updateLstKHFilter([]);
+                      widget.updateIdPhong(null);
+                      widget.updateIdCoSo(null);
+                    });
+                  },
+                  icon: Icon(Icons.clear, size: 20),
+                  label: Text("Xóa lọc"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade600,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  // Đặt lại các biến lọc
-
-                  widget.idcoso = null;
-                  widget.idphong = null;
-                  widget.updateLstKHFilter([]);
-                  widget.updateIdPhong(null);
-                  widget.updateIdCoSo(null);
-                });
-              },
-              child: Text("Xóa lọc"),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -214,7 +316,6 @@ class QLKhachHang extends StatefulWidget {
 }
 
 class _QLKhachHangState extends State<QLKhachHang> {
-  // biến cho phần tìm kiếm và thêm KH
   List<KhachHang> lstKH = [];
   List<Phong> lstPhong = [];
   List<CoSo> lstCoSo = [];
@@ -225,7 +326,6 @@ class _QLKhachHangState extends State<QLKhachHang> {
   int? idcoso;
   int? idphong;
 
-  // biến cho phần filter
   bool isCheckedFilter = true;
   String statusFilter = 'Đang thuê';
   int? idPhongFilter;
@@ -277,7 +377,6 @@ class _QLKhachHangState extends State<QLKhachHang> {
 
   Future<void> GetKhach() async {
     final response = await http.get(
-      //Uri.parse("http://localhost:5167/api/QuanLyKH/GetKhach/${widget.idChu}"),
       Uri.parse("${getUrl()}/api/QuanLyKH/GetKhach/${widget.idChu}"),
       headers: {"Content-Type": "application/json"},
     );
@@ -291,19 +390,16 @@ class _QLKhachHangState extends State<QLKhachHang> {
       lstPhong.clear();
       lstCoSo.clear();
 
-      // Lấy danh sách khách hàng
       final List<dynamic> dataKH = dataReturn['khach'];
       List<Map<String, dynamic>> convertDataKH =
           dataKH.map((e) => e as Map<String, dynamic>).toList();
       print(convertDataKH);
 
-      // Lấy danh sách phòng
       List<dynamic> dataPhong = dataReturn['phongs'];
       List<Map<String, dynamic>> convertDataPhong =
           dataPhong.map((e) => e as Map<String, dynamic>).toList();
       print(convertDataPhong);
 
-      // Lấy danh sách cơ sở
       List<dynamic> dataCoSo = dataReturn['coso'];
       List<Map<String, dynamic>> convertDataCoSo =
           dataCoSo.map((e) => e as Map<String, dynamic>).toList();
@@ -345,63 +441,38 @@ class _QLKhachHangState extends State<QLKhachHang> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text(
             tenant == null ? 'Thêm khách thuê' : 'Chi tiết khách thuê',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: 'Họ tên'),
-                readOnly: true,
-              ),
-              TextField(
-                controller: roomController,
-                decoration: InputDecoration(labelText: 'Phòng'),
-                keyboardType: TextInputType.number,
-                readOnly: true,
-              ),
-              TextField(
-                controller: TextEditingController(text: tenant?.sdt ?? ''),
-                decoration: InputDecoration(labelText: 'Số điện thoại'),
-                readOnly: true,
-              ),
-              TextField(
-                controller: TextEditingController(text: tenant?.ngayDen ?? ''),
-                decoration: InputDecoration(labelText: 'Ngày đến'),
-                readOnly: true,
-              ),
-
-              // DropdownButtonFormField<String>(
-              //   value: status,
-              //   decoration: InputDecoration(labelText: 'Trạng thái'),
-              //   items:
-              //       ['Đang thuê', 'Đã rời đi']
-              //           .map(
-              //             (status) => DropdownMenuItem(
-              //               value: status,
-              //               child: Text(status),
-              //             ),
-              //           )
-              //           .toList(),
-              //   onChanged: (value) {
-              //     setState(() {
-              //       if (value == 'Đang thuê') {
-              //         tenant?.tinhTrang = 1;
-              //       } else {
-              //         tenant?.tinhTrang = 0;
-              //       }
-              //     });
-              //     status = value!;
-              //   },
-              // ),
-            ],
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildDialogTextField(nameController, 'Họ tên', Icons.person),
+                SizedBox(height: 16),
+                _buildDialogTextField(roomController, 'Phòng', Icons.room),
+                SizedBox(height: 16),
+                _buildDialogTextField(
+                  TextEditingController(text: tenant?.sdt ?? ''),
+                  'Số điện thoại',
+                  Icons.phone,
+                ),
+                SizedBox(height: 16),
+                _buildDialogTextField(
+                  TextEditingController(text: tenant?.ngayDen ?? ''),
+                  'Ngày đến',
+                  Icons.calendar_today,
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('thoát'),
+              child: Text('Thoát', style: TextStyle(color: Colors.grey.shade600)),
             ),
           ],
         );
@@ -409,9 +480,27 @@ class _QLKhachHangState extends State<QLKhachHang> {
     );
   }
 
+  Widget _buildDialogTextField(TextEditingController controller, String label, IconData icon) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: Colors.grey.shade600),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+        readOnly: true,
+      ),
+    );
+  }
+
   Future<void> _markTenantAsLeft(int index) async {
     final response = await http.put(
-      //Uri.parse("http://localhost:5167/api/QuanLyKH/deleteKhach/${lstKH[index].idKh}",),
       Uri.parse("${getUrl()}/api/QuanLyKH/deleteKhach/${lstKH[index].idKh}"),
       headers: {"Content-Type": "application/json"},
     );
@@ -422,6 +511,8 @@ class _QLKhachHangState extends State<QLKhachHang> {
         SnackBar(
           content: Text('Đánh dấu khách đã rời đi thành công'),
           backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
     } else {
@@ -429,6 +520,8 @@ class _QLKhachHangState extends State<QLKhachHang> {
         SnackBar(
           content: Text('Đánh dấu khách đã rời đi thất bại'),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
     }
@@ -440,70 +533,31 @@ class _QLKhachHangState extends State<QLKhachHang> {
   }
 
   void _showdialogAddKH() {
-    List<DropdownMenuItem<int>>? selectedItem;
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Thêm khách thuê'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            'Thêm khách thuê',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
           content: Form(
             key: _formKey,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
+            child: Container(
+              width: double.maxFinite,
               child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(labelText: 'Họ tên'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập họ tên';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(labelText: 'email'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập email';
-                        } else if (!RegExp(
-                          r'^[a-zA-Z0-9._%+-/*]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                        ).hasMatch(value)) {
-                          return 'Email không hợp lệ';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: _sdtController,
-                      decoration: InputDecoration(labelText: 'Số điện thoại'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập số điện thoại';
-                        } else if (value.contains(RegExp(r'[a-zA-Z]'))) {
-                          return 'Số điện thoại không hợp lệ';
-                        }
-                        return null;
-                      },
-                    ),
-
-                    TextFormField(
-                      controller: _cccdController,
-                      decoration: InputDecoration(labelText: 'CCCD'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập CCCD';
-                        } else if (value.contains(RegExp(r'[a-zA-Z]'))) {
-                          return 'CCCD không hợp lệ';
-                        }
-                        return null;
-                      },
-                    ),
+                    _buildFormField(_nameController, 'Họ tên', Icons.person, 'Vui lòng nhập họ tên'),
+                    SizedBox(height: 16),
+                    _buildFormField(_emailController, 'Email', Icons.email, 'Vui lòng nhập email', isEmail: true),
+                    SizedBox(height: 16),
+                    _buildFormField(_sdtController, 'Số điện thoại', Icons.phone, 'Vui lòng nhập số điện thoại', isPhone: true),
+                    SizedBox(height: 16),
+                    _buildFormField(_cccdController, 'CCCD', Icons.credit_card, 'Vui lòng nhập CCCD', isNumber: true),
+                    SizedBox(height: 20),
                     _buildropdown(
                       idcoso: idcoso,
                       idphong: idphong,
@@ -519,14 +573,6 @@ class _QLKhachHangState extends State<QLKhachHang> {
           actions: [
             TextButton(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  themKH();
-                }
-              },
-              child: Text('Thêm'),
-            ),
-            TextButton(
-              onPressed: () {
                 Navigator.pop(context);
                 idcoso = null;
                 idphong = null;
@@ -535,7 +581,21 @@ class _QLKhachHangState extends State<QLKhachHang> {
                 _cccdController.clear();
                 _emailController.clear();
               },
-              child: Text('Hủy'),
+              child: Text('Hủy', style: TextStyle(color: Colors.grey.shade600)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  themKH();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade600,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+              child: Text('Thêm'),
             ),
           ],
         );
@@ -543,9 +603,38 @@ class _QLKhachHangState extends State<QLKhachHang> {
     );
   }
 
+  Widget _buildFormField(TextEditingController controller, String label, IconData icon, String errorMsg, {bool isEmail = false, bool isPhone = false, bool isNumber = false}) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: Colors.grey.shade600),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return errorMsg;
+          }
+          if (isEmail && !RegExp(r'^[a-zA-Z0-9._%+-/*]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
+            return 'Email không hợp lệ';
+          }
+          if ((isPhone || isNumber) && value.contains(RegExp(r'[a-zA-Z]'))) {
+            return '${isPhone ? "Số điện thoại" : "CCCD"} không hợp lệ';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
   Future<void> themKH() async {
     final response = await http.post(
-      //Uri.parse("http://localhost:5167/api/QuanLyKH/ThemKhach/${idphong}"),
       Uri.parse("${getUrl()}/api/QuanLyKH/ThemKhach/${idphong}"),
       headers: {"Content-Type": "application/json"},
       body: json.encode({
@@ -567,12 +656,19 @@ class _QLKhachHangState extends State<QLKhachHang> {
         SnackBar(
           content: Text('Thêm khách thành công'),
           backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
     } else {
       if (response.statusCode == 400) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('lỗi'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('lỗi'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
         );
       }
       throw Exception('Failed to load data');
@@ -583,173 +679,244 @@ class _QLKhachHangState extends State<QLKhachHang> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: Text('Quản lý khách thuê'),
+        title: Text(
+          'Quản lý khách thuê',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Colors.blue.shade700,
+        elevation: 0,
         actions: [
-          Text(status),
-          Switch(
-            value: isChecked,
-            onChanged: (value) {
-              setState(() {
-                isChecked = value;
-                print(isChecked);
-                if (isChecked) {
-                  status = 'Đang thuê';
-                } else {
-                  status = 'Đã rời đi';
-                }
-              });
-            },
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  status,
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(width: 8),
+                Switch(
+                  value: isChecked,
+                  onChanged: (value) {
+                    setState(() {
+                      isChecked = value;
+                      print(isChecked);
+                      if (isChecked) {
+                        status = 'Đang thuê';
+                      } else {
+                        status = 'Đã rời đi';
+                      }
+                    });
+                  },
+                  activeColor: Colors.white,
+                  activeTrackColor: Colors.green.shade400,
+                ),
+              ],
+            ),
           ),
         ],
       ),
-      body:
-          isLoading
-              ? Center(child: CircularProgressIndicator())
-              : lstKH.isNotEmpty
-              ? Column(
+      body: isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Tìm kiếm theo tên',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(),
+                  CircularProgressIndicator(color: Colors.blue.shade600),
+                  SizedBox(height: 16),
+                  Text('Đang tải dữ liệu...', style: TextStyle(color: Colors.grey.shade600)),
+                ],
+              ),
+            )
+          : lstKH.isNotEmpty
+              ? Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 2,
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          _searchQuery = value.toLowerCase();
-                        });
-                      },
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Tìm kiếm theo tên',
+                          prefixIcon: Icon(Icons.search, color: Colors.blue.shade600),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _searchQuery = value.toLowerCase();
+                          });
+                        },
+                      ),
                     ),
-                  ),
-                  _buildFilterBar(
-                    idcoso: idCoSoFilter,
-                    idphong: idPhongFilter,
-                    lstPhong: lstPhong,
-                    lstCoSo: lstCoSo,
-                    updateIdPhong: updateIdPhongFilter,
-                    lstKH: lstKH,
-                    updateLstKHFilter: updateLstKHFilter,
-                    updateIdCoSo: updateIdCoSoFilter,
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount:
-                          _searchQuery.isNotEmpty
+                    _buildFilterBar(
+                      idcoso: idCoSoFilter,
+                      idphong: idPhongFilter,
+                      lstPhong: lstPhong,
+                      lstCoSo: lstCoSo,
+                      updateIdPhong: updateIdPhongFilter,
+                      lstKH: lstKH,
+                      updateLstKHFilter: updateLstKHFilter,
+                      updateIdCoSo: updateIdCoSoFilter,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: _searchQuery.isNotEmpty
+                            ? lstKH
+                                .where(
+                                  (u) => u.tenKh.toLowerCase().contains(
+                                    _searchQuery,
+                                  ),
+                                )
+                                .length
+                            : isChecked
+                                ? lstKHFilter.isEmpty
+                                    ? lstKH.where((u) => u.tinhTrang == 1).length
+                                    : lstKHFilter
+                                        .where((u) => u.tinhTrang == 1)
+                                        .length
+                                : lstKHFilter.isEmpty
+                                    ? lstKH.where((u) => u.tinhTrang == 0).length
+                                    : lstKHFilter
+                                        .where((u) => u.tinhTrang == 0)
+                                        .length,
+                        itemBuilder: (context, index) {
+                          final tenant = _searchQuery.isNotEmpty
                               ? lstKH
                                   .where(
                                     (u) => u.tenKh.toLowerCase().contains(
                                       _searchQuery,
                                     ),
                                   )
-                                  .length
+                                  .toList()[index]
                               : isChecked
-                              ? lstKHFilter.isEmpty
-                                  ? lstKH.where((u) => u.tinhTrang == 1).length
-                                  : lstKHFilter
-                                      .where((u) => u.tinhTrang == 1)
-                                      .length
-                              : lstKHFilter.isEmpty
-                              ? lstKH.where((u) => u.tinhTrang == 0).length
-                              : lstKHFilter
-                                  .where((u) => u.tinhTrang == 0)
-                                  .length,
-                      itemBuilder: (context, index) {
-                        final tenant =
-                            _searchQuery.isNotEmpty
-                                ? lstKH
-                                    .where(
-                                      (u) => u.tenKh.toLowerCase().contains(
-                                        _searchQuery,
-                                      ),
-                                    )
-                                    .toList()[index]
-                                : isChecked
-                                ? lstKHFilter.isEmpty
-                                    ? lstKH
-                                        .where((u) => u.tinhTrang == 1)
-                                        .toList()[index]
-                                    : lstKHFilter
-                                        .where((u) => u.tinhTrang == 1)
-                                        .toList()[index]
-                                : lstKHFilter.isEmpty
-                                ? lstKH
-                                    .where((u) => u.tinhTrang == 0)
-                                    .toList()[index]
-                                : lstKHFilter
-                                    .where((u) => u.tinhTrang == 1)
-                                    .toList()[index];
-                        return Card(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          child: ListTile(
-                            title: Text(tenant.tenKh),
-                            subtitle: Text(
-                              "Phòng: ${tenant.tenPhong} Cơ Sở:${tenant.tenCoSo} ",
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  tenant.tinhTrang == 1
-                                      ? 'Đang thuê'
-                                      : 'Đã rời đi',
+                                  ? lstKHFilter.isEmpty
+                                      ? lstKH
+                                          .where((u) => u.tinhTrang == 1)
+                                          .toList()[index]
+                                      : lstKHFilter
+                                          .where((u) => u.tinhTrang == 1)
+                                          .toList()[index]
+                                  : lstKHFilter.isEmpty
+                                      ? lstKH
+                                          .where((u) => u.tinhTrang == 0)
+                                          .toList()[index]
+                                      : lstKHFilter
+                                          .where((u) => u.tinhTrang == 1)
+                                          .toList()[index];
+                          return AnimatedOpacity(
+                            opacity: 1.0,
+                            duration: Duration(milliseconds: 300),
+                            child: Card(
+                              margin: EdgeInsets.symmetric(vertical: 6),
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ListTile(
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                title: Text(
+                                  tenant.tenKh,
                                   style: TextStyle(
-                                    color:
-                                        tenant.tinhTrang == 1
-                                            ? Colors.green
-                                            : Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[800],
                                   ),
                                 ),
-                                if (tenant.tinhTrang == 1)
-                                  IconButton(
-                                    icon: Icon(Icons.close, color: Colors.red),
-
-                                    onPressed:
-                                        () => showDialog(
+                                subtitle: Text(
+                                  "Phòng: ${tenant.tenPhong} - Cơ sở: ${tenant.tenCoSo}",
+                                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      tenant.tinhTrang == 1 ? 'Đang thuê' : 'Đã rời đi',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: tenant.tinhTrang == 1 ? Colors.green : Colors.red,
+                                      ),
+                                    ),
+                                    if (tenant.tinhTrang == 1)
+                                      IconButton(
+                                        icon: Icon(Icons.close, color: Colors.red),
+                                        onPressed: () => showDialog(
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              title: Text('Xác nhận'),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(12)),
+                                              title: Text(
+                                                'Xác nhận',
+                                                style: TextStyle(
+                                                    fontSize: 20, fontWeight: FontWeight.w600),
+                                              ),
                                               content: Text(
                                                 'Bạn có chắc chắn muốn đánh dấu khách này đã rời đi không?',
+                                                style: TextStyle(fontSize: 16),
                                               ),
                                               actions: [
                                                 TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text('Hủy'),
+                                                  onPressed: () => Navigator.pop(context),
+                                                  child: Text(
+                                                    'Hủy',
+                                                    style: TextStyle(
+                                                        fontSize: 16, color: Colors.grey[600]),
+                                                  ),
                                                 ),
                                                 TextButton(
-                                                  onPressed: () {
-                                                    _markTenantAsLeft(index);
-                                                  },
-                                                  child: Text('Đồng ý'),
+                                                  onPressed: () => _markTenantAsLeft(index),
+                                                  child: Text(
+                                                    'Đồng ý',
+                                                    style: TextStyle(
+                                                        fontSize: 16, color: Color(0xFF667eea)),
+                                                  ),
                                                 ),
                                               ],
                                             );
                                           },
                                         ),
-                                  ),
-                              ],
+                                      ),
+                                  ],
+                                ),
+                                onTap: () => _showTenantDialog(tenant: tenant),
+                              ),
                             ),
-                            onTap: () => _showTenantDialog(tenant: tenant),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
+                  ],
+                )
+              : Center(
+                  child: Text(
+                    "Không có dữ liệu",
+                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   ),
-                ],
-              )
-              : Center(child: Text("Không có dữ liệu")),
+                ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showdialogAddKH(),
-        child: Icon(Icons.add),
+        backgroundColor: Color(0xFF667eea),
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

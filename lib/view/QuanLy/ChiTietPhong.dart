@@ -20,6 +20,7 @@ class _ChiTietPhongState extends State<ChiTietPhong> {
   late List<Map<String, dynamic>> khachThueList = [];
   String erroMessage = "";
   bool isLoading = true;
+  
   String getUrl() {
     if (kIsWeb) {
       return 'http://localhost:5167';
@@ -89,128 +90,304 @@ class _ChiTietPhongState extends State<ChiTietPhong> {
 
   void initState() {
     super.initState();
-    // Gọi API để lấy danh sách phòng
     getInfoPhong();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Chi tiết phòng")),
-
-      body:
-          isLoading
-              ? Center(child: CircularProgressIndicator())
-              : Container(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Tên phòng: $tenPhong",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        title: Text(
+          "Chi tiết phòng",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.indigo[600],
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      body: isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.indigo),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "Đang tải thông tin...",
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header với gradient
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.indigo[600]!, Colors.indigo[400]!],
                       ),
-                      Text("Số lượng: $soLuong người"),
-                      SizedBox(height: 20),
-                      Text(
-                        "Danh sách khách hàng:",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
                       ),
-                      SizedBox(height: 10),
-                      Expanded(
-                        child:
-                            erroMessage.isEmpty
-                                ? ListView.builder(
-                                  itemCount: khachThueList.length,
-                                  itemBuilder: (context, index) {
-                                    return Card(
-                                      elevation: 4.0,
-                                      margin: EdgeInsets.only(bottom: 16.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(24, 20, 24, 40),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(
+                                  Icons.room,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      tenPhong ?? "Đang tải...",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        "${soLuong ?? 0} người",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  
+                  // Content
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.people,
+                              color: Colors.indigo[600],
+                              size: 24,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              "Danh sách khách hàng",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        
+                        erroMessage.isEmpty
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: khachThueList.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(bottom: 16),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 1,
+                                          blurRadius: 10,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(20),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Thông tin khách hàng',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.indigo[50],
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Icon(
+                                                  Icons.person,
+                                                  color: Colors.indigo[600],
+                                                  size: 20,
+                                                ),
+                                              ),
+                                              SizedBox(width: 12),
+                                              Text(
+                                                'Khách hàng #${index + 1}',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.indigo[600],
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 8.0),
-                                          SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: DataTable(
-                                              columns: [
-                                                DataColumn(
-                                                  label: Text(
-                                                    'Tên',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                DataColumn(
-                                                  label: Text(
-                                                    'Số điện thoại',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                DataColumn(
-                                                  label: Text(
-                                                    'Ngày đến',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                              rows: [
-                                                DataRow(
-                                                  cells: [
-                                                    DataCell(
-                                                      Text(
-                                                        khachThueList[index]['tenKh'],
-                                                      ),
-                                                    ),
-                                                    DataCell(
-                                                      Text(
-                                                        khachThueList[index]['sdt'],
-                                                      ),
-                                                    ),
-                                                    DataCell(
-                                                      Text(
-                                                        khachThueList[index]['ngayDen'],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
+                                          SizedBox(height: 16),
+                                          
+                                          _buildInfoRow(
+                                            Icons.badge,
+                                            "Tên khách hàng",
+                                            khachThueList[index]['tenKh'] ?? 'N/A',
+                                          ),
+                                          SizedBox(height: 12),
+                                          
+                                          _buildInfoRow(
+                                            Icons.phone,
+                                            "Số điện thoại",
+                                            khachThueList[index]['sdt'] ?? 'N/A',
+                                          ),
+                                          SizedBox(height: 12),
+                                          
+                                          _buildInfoRow(
+                                            Icons.calendar_today,
+                                            "Ngày đến",
+                                            khachThueList[index]['ngayDen'] ?? 'N/A',
                                           ),
                                         ],
                                       ),
-                                    );
-                                  },
-                                )
-                                : Center(child: Text(erroMessage)),
-                      ),
-                    ],
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(40),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.inbox,
+                                      size: 64,
+                                      color: Colors.grey[400],
+                                    ),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      erroMessage,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ],
+                    ),
                   ),
+                ],
+              ),
+            ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          size: 18,
+          color: Colors.grey[600],
+        ),
+        SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
                 ),
               ),
+              SizedBox(height: 2),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

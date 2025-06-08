@@ -15,10 +15,7 @@ class Dangky extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-            ],
+            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
           ),
         ),
         child: SafeArea(
@@ -168,15 +165,11 @@ class _DangkyScreenState extends State<DangkyScreen> {
                 color: Colors.white.withOpacity(0.2),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.person_add,
-                size: 50,
-                color: Colors.white,
-              ),
+              child: Icon(Icons.person_add, size: 50, color: Colors.white),
             ),
-            
+
             SizedBox(height: 32),
-            
+
             // Card chứa form
             Container(
               decoration: BoxDecoration(
@@ -220,14 +213,15 @@ class _DangkyScreenState extends State<DangkyScreen> {
                           ],
                         ),
                       ),
-                      
+
                       SizedBox(height: 32),
-                      
+
                       // Form fields
                       _buildTextField(
                         controller: tenController,
                         label: "Họ và tên",
                         icon: Icons.person_outline,
+
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Vui lòng nhập tên';
@@ -235,9 +229,9 @@ class _DangkyScreenState extends State<DangkyScreen> {
                           return null;
                         },
                       ),
-                      
+
                       SizedBox(height: 20),
-                      
+
                       _buildTextField(
                         controller: emailController,
                         label: "Email",
@@ -247,15 +241,17 @@ class _DangkyScreenState extends State<DangkyScreen> {
                           if (value == null || value.isEmpty) {
                             return 'Vui lòng nhập email';
                           }
-                          if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
+                          if (!RegExp(
+                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                          ).hasMatch(value)) {
                             return 'Vui lòng nhập địa chỉ email hợp lệ';
                           }
                           return null;
                         },
                       ),
-                      
+
                       SizedBox(height: 20),
-                      
+
                       _buildPasswordField(
                         controller: matkhauController,
                         label: "Mật khẩu",
@@ -275,9 +271,9 @@ class _DangkyScreenState extends State<DangkyScreen> {
                           return null;
                         },
                       ),
-                      
+
                       SizedBox(height: 32),
-                      
+
                       // Nút đăng ký
                       Container(
                         width: double.infinity,
@@ -293,22 +289,23 @@ class _DangkyScreenState extends State<DangkyScreen> {
                             ),
                             disabledBackgroundColor: Colors.grey[300],
                           ),
-                          child: _isLoading
-                              ? SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
+                          child:
+                              _isLoading
+                                  ? SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                  : Text(
+                                    "Đăng ký",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                )
-                              : Text(
-                                  "Đăng ký",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
                         ),
                       ),
                     ],
@@ -316,9 +313,9 @@ class _DangkyScreenState extends State<DangkyScreen> {
                 ),
               ),
             ),
-            
+
             SizedBox(height: 24),
-            
+
             // Link đăng nhập
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -399,7 +396,9 @@ class _DangkyScreenState extends State<DangkyScreen> {
         prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
         suffixIcon: IconButton(
           icon: Icon(
-            isHidden ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            isHidden
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
             color: Colors.grey[600],
           ),
           onPressed: onToggleVisibility,

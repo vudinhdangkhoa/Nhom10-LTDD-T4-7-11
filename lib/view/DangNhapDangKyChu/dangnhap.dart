@@ -1,9 +1,11 @@
 import 'dart:convert';
 
-import 'package:buoi03/TrangChu.dart';
+import 'package:buoi03/view/TrangChu/HoSo.dart';
+import 'package:buoi03/view/TrangChu/TrangChu.dart';
 import 'package:buoi03/dashboard.dart';
 import 'package:buoi03/view/DangNhapDangKyChu/dangky.dart';
 import 'package:buoi03/view/DangNhapDangKyChu/quenmk.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,10 +18,7 @@ class LoginPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-            ],
+            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
           ),
         ),
         child: Dangnhap(),
@@ -42,6 +41,13 @@ class _DangnhapState extends State<Dangnhap> {
   bool _isLoading = false;
   bool _isHide = true;
 
+  String getUrl() {
+    if (kIsWeb) {
+      return 'http://localhost:5167';
+    }
+    return 'http://10.0.2.2:5167';
+  }
+
   Future<void> _login() async {
     if (check.currentState!.validate()) {
       setState(() {
@@ -49,7 +55,7 @@ class _DangnhapState extends State<Dangnhap> {
       });
       try {
         final respone = await http.post(
-          Uri.parse('http://localhost:5167/api/dangnhap/DangNhapChu'),
+          Uri.parse('${getUrl()}/api/dangnhap/DangNhapChu'),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({
             "taiKhoan": taikhoan.text,
@@ -62,28 +68,55 @@ class _DangnhapState extends State<Dangnhap> {
           final data = jsonDecode(respone.body);
           print(data);
           if (data['id'] != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.check_circle, color: Colors.white),
-                    SizedBox(width: 8),
-                    Text("Đăng nhập thành công"),
-                  ],
+            if (data['message'] != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text("Vui lòng cập nhật thông tin cá nhân"),
+                    ],
+                  ),
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  behavior: SnackBarBehavior.floating,
                 ),
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) =>
+                          DashboardScreen(idChu: data['id'], showHoSo: true),
                 ),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>  DashboardScreen(idChu: data['id']),
-              ),
-            );
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text("Đăng nhập thành công"),
+                    ],
+                  ),
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(idChu: data['id']),
+                ),
+              );
+            }
           }
         }
         if (respone.statusCode == 401) {
@@ -139,7 +172,7 @@ class _DangnhapState extends State<Dangnhap> {
           child: Column(
             children: [
               SizedBox(height: 60),
-              
+
               // Logo và tiêu đề
               Column(
                 children: [
@@ -168,16 +201,13 @@ class _DangnhapState extends State<Dangnhap> {
                   SizedBox(height: 8),
                   Text(
                     "Đăng nhập để tiếp tục",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.white70),
                   ),
                 ],
               ),
-              
+
               SizedBox(height: 48),
-              
+
               // Form đăng nhập
               Container(
                 decoration: BoxDecoration(
@@ -210,9 +240,9 @@ class _DangnhapState extends State<Dangnhap> {
                             return null;
                           },
                         ),
-                        
+
                         SizedBox(height: 20),
-                        
+
                         // Password field
                         _buildPasswordField(
                           controller: matkhau,
@@ -230,9 +260,9 @@ class _DangnhapState extends State<Dangnhap> {
                             return null;
                           },
                         ),
-                        
+
                         SizedBox(height: 16),
-                        
+
                         // Quên mật khẩu
                         Align(
                           alignment: Alignment.centerRight,
@@ -240,7 +270,9 @@ class _DangnhapState extends State<Dangnhap> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Quenmk()),
+                                MaterialPageRoute(
+                                  builder: (context) => Quenmk(),
+                                ),
                               );
                             },
                             child: Text(
@@ -253,9 +285,9 @@ class _DangnhapState extends State<Dangnhap> {
                             ),
                           ),
                         ),
-                        
+
                         SizedBox(height: 32),
-                        
+
                         // Nút đăng nhập
                         Container(
                           width: double.infinity,
@@ -271,22 +303,23 @@ class _DangnhapState extends State<Dangnhap> {
                               ),
                               disabledBackgroundColor: Colors.grey[300],
                             ),
-                            child: _isLoading
-                                ? SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
+                            child:
+                                _isLoading
+                                    ? SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                    : Text(
+                                      "Đăng nhập",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  )
-                                : Text(
-                                    "Đăng nhập",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
                           ),
                         ),
                       ],
@@ -294,9 +327,9 @@ class _DangnhapState extends State<Dangnhap> {
                   ),
                 ),
               ),
-              
+
               SizedBox(height: 32),
-              
+
               // Divider
               Row(
                 children: [
@@ -311,9 +344,9 @@ class _DangnhapState extends State<Dangnhap> {
                   Expanded(child: Divider(color: Colors.white54)),
                 ],
               ),
-              
+
               SizedBox(height: 32),
-              
+
               // Nút đăng ký
               Container(
                 width: double.infinity,
@@ -401,7 +434,9 @@ class _DangnhapState extends State<Dangnhap> {
         prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
         suffixIcon: IconButton(
           icon: Icon(
-            isHidden ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            isHidden
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
             color: Colors.grey[600],
           ),
           onPressed: onToggleVisibility,

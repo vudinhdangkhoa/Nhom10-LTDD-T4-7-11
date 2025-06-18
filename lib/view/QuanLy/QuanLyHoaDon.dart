@@ -686,12 +686,12 @@ class _QLHoaDonState extends State<QLHoaDon> with TickerProviderStateMixin {
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),
-                  onTap: () {
+                  onTap: () async {
                     // Xử lý khi nhấn vào hóa đơn
                     isNewInvoice
                         ? showDialogAddHoaDon(hoaDon['idHoaDon'])
                         : isPaid
-                        ? Navigator.push(
+                        ? result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChiTietHoaDon(hoadon: hoaDon),
@@ -699,7 +699,7 @@ class _QLHoaDonState extends State<QLHoaDon> with TickerProviderStateMixin {
                         )
                         : isUnPaid
                         ? print('Chưa thanh toán')
-                        : result = Navigator.push(
+                        : result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChiTietHoaDon(hoadon: hoaDon),

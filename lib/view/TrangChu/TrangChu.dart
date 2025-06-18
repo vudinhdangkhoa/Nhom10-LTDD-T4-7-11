@@ -6,12 +6,12 @@ import 'package:buoi03/view/TrangChu/DoiMK.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import '../../TroChuyen.dart';
+import 'TroChuyen.dart';
 import 'package:flutter/material.dart';
 import '../QuanLy/QuanLyCoSo.dart';
 import '../QuanLy/QuanLyKhach.dart';
 import '../ThongKe/ThongKe.dart';
-import '../../dashboard.dart';
+import 'dashboard.dart';
 import '../QuanLy/QuanLyHoaDon.dart';
 import 'HoSo.dart';
 
@@ -346,11 +346,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 activeIcon: _buildNavIcon(Icons.dashboard, 0),
                 label: 'Dashboard',
               ),
-              BottomNavigationBarItem(
-                icon: _buildNavIcon(Icons.apartment_outlined, 1),
-                activeIcon: _buildNavIcon(Icons.apartment, 1),
-                label: 'Cơ sở & Phòng',
-              ),
+
               BottomNavigationBarItem(
                 icon: _buildNavIcon(Icons.chat_bubble_outline, 2),
                 activeIcon: _buildNavIcon(Icons.chat_bubble, 2),

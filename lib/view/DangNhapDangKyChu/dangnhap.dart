@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:buoi03/view/TrangChu/HoSo.dart';
 import 'package:buoi03/view/TrangChu/TrangChu.dart';
-import 'package:buoi03/dashboard.dart';
+import 'package:buoi03/view/TrangChu/dashboard.dart';
 import 'package:buoi03/view/DangNhapDangKyChu/dangky.dart';
 import 'package:buoi03/view/DangNhapDangKyChu/quenmk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import '../KhachHang/giaodien_khachhang.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -117,6 +119,29 @@ class _DangnhapState extends State<Dangnhap> {
                 ),
               );
             }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text("Đăng nhập thành công"),
+                  ],
+                ),
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => KhachHang(idKH: data['idKH']),
+              ),
+            );
           }
         }
         if (respone.statusCode == 401) {
@@ -166,6 +191,7 @@ class _DangnhapState extends State<Dangnhap> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      bottom: false,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -236,6 +262,10 @@ class _DangnhapState extends State<Dangnhap> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Vui lòng nhập email';
+                            } else if (!RegExp(
+                              r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+                            ).hasMatch(value)) {
+                              return 'Vui lòng nhập email hợp lệ';
                             }
                             return null;
                           },

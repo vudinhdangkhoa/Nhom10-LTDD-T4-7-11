@@ -3,30 +3,33 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class HoSo extends StatefulWidget {
-  int idChu;
-  HoSo({Key? key, required this.idChu}) : super(key: key);
+class HoSoKH extends StatefulWidget {
+  int idKH;
+  HoSoKH({Key? key, required this.idKH}) : super(key: key);
 
   @override
-  _HoSoState createState() => _HoSoState();
+  _HoSoKHState createState() => _HoSoKHState();
 }
 
-class _HoSoState extends State<HoSo> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _hoTenController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _giaDienController = TextEditingController();
-  final TextEditingController _giaNuocController = TextEditingController();
-  Map<String, dynamic> hoSoChu = {};
-  bool isRead = true;
+class _HoSoKHState extends State<HoSoKH> {
   bool isloading = true;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController _tenController = TextEditingController();
+  TextEditingController _sdtController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _cccdController = TextEditingController();
+
+  bool isRead = true;
+
   final ImagePicker _picker = ImagePicker();
   XFile? _pickedAvatar;
+
+  Map<String, dynamic> InfoKH = {};
 
   String getUrl() {
     if (kIsWeb) {
@@ -35,71 +38,84 @@ class _HoSoState extends State<HoSo> {
     return 'http://10.0.2.2:5167';
   }
 
-  Future<void> GetHoSoChu() async {
+  Future<void> getInfoKH() async {
     try {
       final respone = await http.get(
-        Uri.parse('${getUrl()}/api/TrangChu/GetThongTinChu/${widget.idChu}'),
+        Uri.parse('${getUrl()}/api/TrangChuKH/getinfoKH/${widget.idKH}'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
       );
-      print('Response status: ${respone.statusCode}');
+      print('getInfoKH: ${respone.statusCode}');
       if (respone.statusCode == 200) {
-        print('Response data: ${respone.body}');
         setState(() {
-          hoSoChu = jsonDecode(respone.body);
+          InfoKH = json.decode(respone.body);
           isloading = false;
 
-          _hoTenController.text = hoSoChu['ten'] ?? '';
-          _emailController.text = hoSoChu['taiKhoan'] ?? '';
-          _giaDienController.text = hoSoChu['giaDien']?.toString() ?? '';
-          _giaNuocController.text = hoSoChu['giaNuoc']?.toString() ?? '';
+          // Set giá trị cho các controller
+          _tenController.text = InfoKH['tenKh'] ?? '';
+          _sdtController.text = InfoKH['sdt'] ?? '';
+          _emailController.text = InfoKH['email'] ?? '';
+          _cccdController.text = InfoKH['cccd'] ?? '';
         });
+        print('InfoKH: $InfoKH');
       }
     } catch (e) {
       print('Error fetching data: $e');
     }
   }
 
-  Future<void> updateHoSoChu() async {
-    final respone = await http.put(
-      Uri.parse('${getUrl()}/api/TrangChu/UpdateHoSoChu/${widget.idChu}'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode({
-        'hoten': _hoTenController.text,
-        'taikhoan': _emailController.text,
-        'giadien': double.tryParse(_giaDienController.text),
-        'gianuoc': double.tryParse(_giaNuocController.text),
-      }),
-    );
-    print('Response status: ${respone.statusCode}');
-    if (respone.statusCode == 200) {
-      print('Update successful');
-      // Refresh the profile after update
-      setState(() {
-        isRead = true;
-        isloading = true;
-        GetHoSoChu();
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Cập nhật hồ sơ thành công')));
-        // Set to read-only mode after update
-      });
-    } else {
-      print('Update failed: ${respone.body}');
+  Future<void> updateInfoKH() async {
+    try {
+      final response = await http.put(
+        Uri.parse('${getUrl()}/api/TrangChuKH/updateInfoKH/${widget.idKH}'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'tenKH': _tenController.text,
+          'sdt': _sdtController.text,
+          'email': _emailController.text,
+          'cccd': _cccdController.text,
+        }),
+      );
+      print('Update response: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        setState(() {
+          isRead = true;
+          isloading = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cập nhật thông tin thành công'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        getInfoKH(); // Refresh dữ liệu
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cập nhật thông tin thất bại'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Update error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đã xảy ra lỗi khi cập nhật'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
   Future<void> _requestPermission(Permission permission) async {
-    if (await permission
-        .isDenied) //Kiểm tra xem quyền cụ thể (ví dụ: quyền truy cập bộ nhớ, camera, v.v.) có bị từ chối hay không.
-    {
-      await permission
-          .request(); //Nếu quyền bị từ chối, phương thức này sẽ hiển thị hộp thoại yêu cầu người dùng cấp quyền.
+    if (await permission.isDenied) {
+      await permission.request();
     }
   }
 
@@ -146,11 +162,9 @@ class _HoSoState extends State<HoSo> {
   Future<void> uploadAvatar(XFile pickAnh) async {
     final bytes = await pickAnh.readAsBytes();
     final base64Image = base64Encode(bytes);
-    print('Base64 length: ${base64Image.length}');
 
-    print('Base64 Image: $base64Image');
     final response = await http.put(
-      Uri.parse('${getUrl()}/api/TrangChu/UpdateAvatarChu/${widget.idChu}'),
+      Uri.parse('${getUrl()}/api/TrangChuKH/updateAvatarKH/${widget.idKH}'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -161,15 +175,17 @@ class _HoSoState extends State<HoSo> {
     if (response.statusCode == 200) {
       setState(() {
         _pickedAvatar = null;
-        GetHoSoChu();
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Cập nhật ảnh đại diện thành công')),
+      );
+      getInfoKH();
     } else {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Cập nhật ảnh đại diện thất bại')));
       setState(() {
         _pickedAvatar = null;
-        GetHoSoChu();
       });
     }
   }
@@ -177,7 +193,7 @@ class _HoSoState extends State<HoSo> {
   @override
   void initState() {
     super.initState();
-    GetHoSoChu();
+    getInfoKH();
   }
 
   @override
@@ -186,16 +202,13 @@ class _HoSoState extends State<HoSo> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(
-          'Hồ Sơ Cá Nhân',
+          'Hồ Sơ Khách Hàng',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
         backgroundColor: Colors.blue[600],
         leading: IconButton(
           onPressed: () {
-            if (!isRead && _formKey.currentState!.validate()) {
-              updateHoSoChu();
-            }
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -214,7 +227,7 @@ class _HoSoState extends State<HoSo> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'Đang tải hồ sơ...',
+                      'Đang tải thông tin...',
                       style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                     ),
                   ],
@@ -256,7 +269,7 @@ class _HoSoState extends State<HoSo> {
                                             File(_pickedAvatar!.path),
                                           ),
                                         )
-                                        : (hoSoChu['avatar'] == 'khonghinh'
+                                        : (InfoKH['avatar'] == 'khonghinh'
                                             ? CircleAvatar(
                                               radius: 60,
                                               backgroundImage: AssetImage(
@@ -266,7 +279,7 @@ class _HoSoState extends State<HoSo> {
                                             : CircleAvatar(
                                               radius: 60,
                                               backgroundImage: NetworkImage(
-                                                '${getUrl()}/images/Avatar/${hoSoChu['avatar']}',
+                                                '${getUrl()}/images/Avatar/${InfoKH['avatar']}',
                                               ),
                                             )),
                               ),
@@ -292,7 +305,7 @@ class _HoSoState extends State<HoSo> {
                           ),
                           SizedBox(height: 15),
                           Text(
-                            hoSoChu['ten'] ?? 'Chưa có tên',
+                            InfoKH['tenKH'] ?? 'Chưa có tên',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -301,7 +314,7 @@ class _HoSoState extends State<HoSo> {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            hoSoChu['taiKhoan'] ?? 'Chưa có email',
+                            InfoKH['email'] ?? 'Chưa có email',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.white70,
@@ -315,7 +328,7 @@ class _HoSoState extends State<HoSo> {
                     Padding(
                       padding: EdgeInsets.all(20),
                       child: Form(
-                        key: _formKey,
+                        key: formKey,
                         child: Column(
                           children: [
                             // Card chứa form
@@ -348,13 +361,29 @@ class _HoSoState extends State<HoSo> {
 
                                   // Họ tên
                                   _buildTextField(
-                                    controller: _hoTenController,
+                                    controller: _tenController,
                                     label: 'Họ và tên',
                                     icon: Icons.person,
                                     readOnly: isRead,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Vui lòng nhập họ tên';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+
+                                  SizedBox(height: 15),
+
+                                  // Số điện thoại
+                                  _buildTextField(
+                                    controller: _sdtController,
+                                    label: 'Số điện thoại',
+                                    icon: Icons.phone,
+                                    readOnly: isRead,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Vui lòng nhập số điện thoại';
                                       }
                                       return null;
                                     },
@@ -379,82 +408,21 @@ class _HoSoState extends State<HoSo> {
                                       return null;
                                     },
                                   ),
-                                ],
-                              ),
-                            ),
 
-                            SizedBox(height: 20),
+                                  SizedBox(height: 15),
 
-                            // Card giá cả
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 10,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              padding: EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Thiết lập giá',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[800],
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: _buildTextField(
-                                          controller: _giaDienController,
-                                          label: 'Giá điện ',
-                                          icon: Icons.flash_on,
-                                          readOnly: isRead,
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty ||
-                                                value == '0') {
-                                              return 'Vui lòng nhập giá điện';
-                                            } else if (double.tryParse(value) ==
-                                                null) {
-                                              return 'Vui lòng nhập số hợp lệ';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(width: 15),
-                                      Expanded(
-                                        child: _buildTextField(
-                                          controller: _giaNuocController,
-                                          label: 'Giá nước ',
-                                          icon: Icons.water_drop,
-                                          readOnly: isRead,
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty ||
-                                                value == '0') {
-                                              return 'Vui lòng nhập giá nước';
-                                            } else if (double.tryParse(value) ==
-                                                null) {
-                                              return 'Vui lòng nhập số hợp lệ';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                    ],
+                                  // CCCD
+                                  _buildTextField(
+                                    controller: _cccdController,
+                                    label: 'CCCD/CMND',
+                                    icon: Icons.credit_card,
+                                    readOnly: isRead,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Vui lòng nhập CCCD/CMND';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ],
                               ),
@@ -465,7 +433,6 @@ class _HoSoState extends State<HoSo> {
                             // Buttons
                             Row(
                               children: [
-                                // Sửa lại phần Button "Chỉnh sửa/Hủy"
                                 Expanded(
                                   child: Container(
                                     height: 50,
@@ -473,19 +440,14 @@ class _HoSoState extends State<HoSo> {
                                       onPressed: () {
                                         if (!isRead) {
                                           // Reset về giá trị ban đầu khi hủy
-                                          _hoTenController.text =
-                                              hoSoChu['ten'] ?? '';
+                                          _tenController.text =
+                                              InfoKH['tenKH'] ?? '';
+                                          _sdtController.text =
+                                              InfoKH['sdt'] ?? '';
                                           _emailController.text =
-                                              hoSoChu['taiKhoan'] ?? '';
-                                          _giaDienController.text =
-                                              hoSoChu['giaDien']?.toString() ??
-                                              '';
-                                          _giaNuocController.text =
-                                              hoSoChu['giaNuoc']?.toString() ??
-                                              '';
-
-                                          // Reset validation errors
-                                          _formKey.currentState?.reset();
+                                              InfoKH['email'] ?? '';
+                                          _cccdController.text =
+                                              InfoKH['cccd'] ?? '';
                                         }
                                         setState(() {
                                           isRead = !isRead;
@@ -533,9 +495,9 @@ class _HoSoState extends State<HoSo> {
                                           isRead
                                               ? null
                                               : () {
-                                                if (_formKey.currentState!
+                                                if (formKey.currentState!
                                                     .validate()) {
-                                                  updateHoSoChu();
+                                                  updateInfoKH();
                                                 }
                                               },
                                       style: ElevatedButton.styleFrom(

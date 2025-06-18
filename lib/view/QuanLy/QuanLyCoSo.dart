@@ -61,7 +61,10 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
           erroMessage = "";
         });
       } else {
-        throw Exception('Failed to load properties');
+        setState(() {
+          isLoading = false;
+          erroMessage = "Không có cơ sở nào";
+        });
       }
     } catch (e) {
       print(e);
@@ -95,7 +98,9 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
               ),
               backgroundColor: Colors.red,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           );
 
@@ -116,7 +121,9 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
               ),
               backgroundColor: Colors.green,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           );
           setState(() {
@@ -135,94 +142,99 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
   void _showdialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(Icons.add_business, color: Colors.blue),
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
-            SizedBox(width: 12),
-            Text('Thêm cơ sở mới'),
-          ],
-        ),
-        content: Form(
-          key: formKey,
-          child: Container(
-            width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            title: Row(
               children: [
-                TextFormField(
-                  controller: tenCoSoController,
-                  decoration: InputDecoration(
-                    labelText: 'Tên cơ sở',
-                    prefixIcon: Icon(Icons.business, color: Colors.blue),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
-                    ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập tên cơ sở';
-                    }
-                    return null;
-                  },
+                  child: Icon(Icons.add_business, color: Colors.blue),
                 ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: diaChiController,
-                  decoration: InputDecoration(
-                    labelText: 'Địa chỉ',
-                    prefixIcon: Icon(Icons.location_on, color: Colors.blue),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập địa chỉ';
-                    }
-                    return null;
-                  },
-                ),
+                SizedBox(width: 12),
+                Text('Thêm cơ sở mới'),
               ],
             ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            child: Text('Hủy', style: TextStyle(color: Colors.grey[600])),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            content: Form(
+              key: formKey,
+              child: Container(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: tenCoSoController,
+                      decoration: InputDecoration(
+                        labelText: 'Tên cơ sở',
+                        prefixIcon: Icon(Icons.business, color: Colors.blue),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.blue, width: 2),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vui lòng nhập tên cơ sở';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: diaChiController,
+                      decoration: InputDecoration(
+                        labelText: 'Địa chỉ',
+                        prefixIcon: Icon(Icons.location_on, color: Colors.blue),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.blue, width: 2),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vui lòng nhập địa chỉ';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
-            child: Text('Thêm'),
-            onPressed: () {
-              addCoSo();
-            },
+            actions: [
+              TextButton(
+                child: Text('Hủy', style: TextStyle(color: Colors.grey[600])),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text('Thêm'),
+                onPressed: () {
+                  addCoSo();
+                },
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -250,7 +262,9 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
             ),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         );
         setState(() {
@@ -270,7 +284,9 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
             ),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         );
         setState(() {
@@ -291,7 +307,9 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Row(
             children: [
               Container(
@@ -369,7 +387,9 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               child: Text('Cập nhật'),
               onPressed: () {
@@ -411,7 +431,9 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
             ),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         );
         setState(() {
@@ -438,7 +460,9 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
               ),
               backgroundColor: Colors.red,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           );
         });
@@ -460,292 +484,297 @@ class _QuanLyPhongVaCoSoState extends State<DSCoSoVaPhong> {
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Đang tải dữ liệu...',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-            )
-          : erroMessage.isNotEmpty
+      body:
+          isLoading
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: Colors.red[300],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Đang tải dữ liệu...',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              )
+              : erroMessage.isNotEmpty
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+                    SizedBox(height: 16),
+                    Text(
+                      erroMessage,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.red[600],
+                        fontWeight: FontWeight.w500,
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        erroMessage,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.red[600],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                    ),
+                  ],
+                ),
+              )
               : coso.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.business_outlined,
-                            size: 64,
-                            color: Colors.grey[400],
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'Chưa có cơ sở nào',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Nhấn nút + để thêm cơ sở mới',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[500],
-                            ),
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.business_outlined,
+                      size: 64,
+                      color: Colors.grey[400],
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Chưa có cơ sở nào',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Nhấn nút + để thêm cơ sở mới',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                    ),
+                  ],
+                ),
+              )
+              : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ListView.builder(
+                  itemCount: coso.length,
+                  itemBuilder: (context, index) {
+                    final CoSo = coso[index];
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: Offset(0, 2),
                           ),
                         ],
                       ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ListView.builder(
-                        itemCount: coso.length,
-                        itemBuilder: (context, index) {
-                          final CoSo = coso[index];
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 10,
-                                  offset: Offset(0, 2),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(16),
+                        leading: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.business,
+                            color: Colors.blue[600],
+                            size: 24,
+                          ),
+                        ),
+                        title: Text(
+                          CoSo.tenCoSo,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  size: 16,
+                                  color: Colors.grey[500],
+                                ),
+                                SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    CoSo.diaChi,
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                            child: ListTile(
-                              contentPadding: EdgeInsets.all(16),
-                              leading: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[50],
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Icon(
-                                  Icons.business,
-                                  color: Colors.blue[600],
-                                  size: 24,
-                                ),
+                            SizedBox(height: 8),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
                               ),
-                              title: Text(
-                                CoSo.tenCoSo,
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Số phòng: ${CoSo.soLuong}',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.grey[800],
+                                  color: Colors.blue[700],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.location_on,
-                                        size: 16,
-                                        color: Colors.grey[500],
-                                      ),
-                                      SizedBox(width: 4),
-                                      Expanded(
-                                        child: Text(
-                                          CoSo.diaChi,
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue[50],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      'Số phòng: ${CoSo.soLuong}',
-                                      style: TextStyle(
-                                        color: Colors.blue[700],
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue[50],
-                                      borderRadius: BorderRadius.circular(8),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.blue[600],
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DSPhong(coSo: CoSo),
                                     ),
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.arrow_forward,
-                                        color: Colors.blue[600],
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                DSPhong(coSo: CoSo),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: CoSo.soLuong == 0
-                                          ? Colors.red[50]
-                                          : Colors.grey[100],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: CoSo.soLuong == 0
-                                        ? IconButton(
-                                            icon: Icon(Icons.delete,
-                                                color: Colors.red[600]),
-                                            onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    shape: RoundedRectangleBorder(
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Container(
+                              decoration: BoxDecoration(
+                                color:
+                                    CoSo.soLuong == 0
+                                        ? Colors.red[50]
+                                        : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child:
+                                  CoSo.soLuong == 0
+                                      ? IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.red[600],
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                                title: Row(
+                                                  children: [
+                                                    Container(
+                                                      padding: EdgeInsets.all(
+                                                        8,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.red
+                                                            .withOpacity(0.1),
                                                         borderRadius:
                                                             BorderRadius.circular(
-                                                                16)),
-                                                    title: Row(
-                                                      children: [
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.all(8),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.red
-                                                                .withOpacity(0.1),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(8),
-                                                          ),
-                                                          child: Icon(
-                                                              Icons.delete,
-                                                              color:
-                                                                  Colors.red),
-                                                        ),
-                                                        SizedBox(width: 12),
-                                                        Text('Xóa cơ sở'),
-                                                      ],
+                                                              8,
+                                                            ),
+                                                      ),
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        color: Colors.red,
+                                                      ),
                                                     ),
-                                                    content: Text(
-                                                      'Bạn có chắc chắn muốn xóa cơ sở này?',
+                                                    SizedBox(width: 12),
+                                                    Text('Xóa cơ sở'),
+                                                  ],
+                                                ),
+                                                content: Text(
+                                                  'Bạn có chắc chắn muốn xóa cơ sở này?',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    child: Text(
+                                                      'Hủy',
                                                       style: TextStyle(
-                                                          fontSize: 16),
+                                                        color: Colors.grey[600],
+                                                      ),
                                                     ),
-                                                    actions: [
-                                                      TextButton(
-                                                        child: Text('Hủy',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .grey[600])),
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
+                                                    onPressed: () {
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop();
+                                                    },
+                                                  ),
+                                                  ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
                                                       ),
-                                                      ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          foregroundColor:
-                                                              Colors.white,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8)),
-                                                        ),
-                                                        child: Text('Xóa'),
-                                                        onPressed: () {
-                                                          deleteCoSo(
-                                                              CoSo.idCoSo);
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
+                                                    ),
+                                                    child: Text('Xóa'),
+                                                    onPressed: () {
+                                                      deleteCoSo(CoSo.idCoSo);
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop();
+                                                    },
+                                                  ),
+                                                ],
                                               );
                                             },
-                                          )
-                                        : IconButton(
-                                            icon: Icon(Icons.delete,
-                                                color: Colors.grey[400]),
-                                            onPressed: null,
-                                          ),
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                tenCoSoController.text = CoSo.tenCoSo;
-                                diaChiController.text = CoSo.diaChi;
-
-                                detailCoSo(
-                                  CoSo.idCoSo,
-                                  tenCoSoController.text,
-                                  diaChiController.text,
-                                );
-                              },
+                                          );
+                                        },
+                                      )
+                                      : IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.grey[400],
+                                        ),
+                                        onPressed: null,
+                                      ),
                             ),
+                          ],
+                        ),
+                        onTap: () {
+                          tenCoSoController.text = CoSo.tenCoSo;
+                          diaChiController.text = CoSo.diaChi;
+
+                          detailCoSo(
+                            CoSo.idCoSo,
+                            tenCoSoController.text,
+                            diaChiController.text,
                           );
                         },
                       ),
-                    ),
+                    );
+                  },
+                ),
+              ),
       floatingActionButton: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),

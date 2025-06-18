@@ -13,12 +13,17 @@ class ChiTietHoaDon extends StatefulWidget {
 }
 
 class _ChiTietHoaDonState extends State<ChiTietHoaDon> {
+  bool isConfirming = false;
   @override
   void initState() {
     super.initState();
   }
 
   Future<void> XacNhanHoaDon() async {
+    if (isConfirming) return;
+    setState(() {
+      isConfirming = true; // Bắt đầu loading
+    });
     final respone = await http.put(
       Uri.parse(
         '${getUrl()}/api/QLHoaDon/XacNhanHoaDon/${widget.hoadon['idHoaDon']}',
@@ -293,9 +298,12 @@ class _ChiTietHoaDonState extends State<ChiTietHoaDon> {
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(30),
-                    onTap: () {
-                      XacNhanHoaDon();
-                    },
+                    onTap:
+                        isConfirming
+                            ? null
+                            : () {
+                              XacNhanHoaDon();
+                            },
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -309,15 +317,30 @@ class _ChiTietHoaDonState extends State<ChiTietHoaDon> {
                               color: Colors.white.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Icon(
-                              Icons.check_circle_outline,
-                              color: Colors.white,
-                              size: 24,
-                            ),
+                            child:
+                                isConfirming
+                                    ? SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
+                                      ),
+                                    )
+                                    : Icon(
+                                      Icons.check_circle_outline,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
                           ),
                           SizedBox(width: 12),
                           Text(
-                            'Xác Nhận Thanh Toán',
+                            isConfirming
+                                ? 'Đang xử lý...'
+                                : 'Xác Nhận Thanh Toán',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,

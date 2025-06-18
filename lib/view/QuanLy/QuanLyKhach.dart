@@ -46,19 +46,26 @@ class __buildropdownState extends State<_buildropdown> {
           ),
           child: DropdownButtonFormField<int>(
             value: widget.idcoso == 0 ? null : widget.idcoso,
-            hint: Text("Chọn cơ sở", style: TextStyle(color: Colors.grey.shade600)),
+            hint: Text(
+              "Chọn cơ sở",
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
             ),
-            items: widget.lstCoSo
-                .map(
-                  (u) => DropdownMenuItem(
-                    child: Text(u.tenCoSo, style: TextStyle(fontSize: 16)),
-                    value: u.idCoSo,
-                  ),
-                )
-                .toList(),
+            items:
+                widget.lstCoSo
+                    .map(
+                      (u) => DropdownMenuItem(
+                        child: Text(u.tenCoSo, style: TextStyle(fontSize: 16)),
+                        value: u.idCoSo,
+                      ),
+                    )
+                    .toList(),
             onChanged: (value) {
               setState(() {
                 widget.idcoso = value!;
@@ -89,20 +96,30 @@ class __buildropdownState extends State<_buildropdown> {
           ),
           child: DropdownButtonFormField<int>(
             value: widget.idphong,
-            hint: Text("Chọn phòng", style: TextStyle(color: Colors.grey.shade600)),
+            hint: Text(
+              "Chọn phòng",
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
             ),
-            items: widget.lstPhong
-                .where((u) => u.idCoSo == widget.idcoso)
-                .map(
-                  (u) => DropdownMenuItem(
-                    child: Text(u.tenPhong ?? 'Không tên', style: TextStyle(fontSize: 16)),
-                    value: u.idPhong,
-                  ),
-                )
-                .toList(),
+            items:
+                widget.lstPhong
+                    .where((u) => u.idCoSo == widget.idcoso)
+                    .map(
+                      (u) => DropdownMenuItem(
+                        child: Text(
+                          u.tenPhong ?? 'Không tên',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        value: u.idPhong,
+                      ),
+                    )
+                    .toList(),
             onChanged: (value) {
               setState(() {
                 widget.idphong = value!;
@@ -131,7 +148,7 @@ class _buildFilterBar extends StatefulWidget {
   List<KhachHang> lstKH;
   Function(List<KhachHang>) updateLstKHFilter;
   Function(int?) updateIdCoSo;
-  
+
   _buildFilterBar({
     Key? key,
     required this.idcoso,
@@ -192,21 +209,25 @@ class __buildFilterBarState extends State<_buildFilterBar> {
                     value: widget.idcoso,
                     hint: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text("Chọn cơ sở", style: TextStyle(color: Colors.grey.shade600)),
+                      child: Text(
+                        "Chọn cơ sở",
+                        style: TextStyle(color: Colors.grey.shade600),
+                      ),
                     ),
                     isExpanded: true,
                     underline: SizedBox(),
-                    items: widget.lstCoSo
-                        .map(
-                          (coSo) => DropdownMenuItem(
-                            value: coSo.idCoSo,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(coSo.tenCoSo),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                    items:
+                        widget.lstCoSo
+                            .map(
+                              (coSo) => DropdownMenuItem(
+                                value: coSo.idCoSo,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  child: Text(coSo.tenCoSo),
+                                ),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       setState(() {
                         widget.idcoso = value;
@@ -225,22 +246,26 @@ class __buildFilterBarState extends State<_buildFilterBar> {
                     value: widget.idphong,
                     hint: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text("Chọn phòng", style: TextStyle(color: Colors.grey.shade600)),
+                      child: Text(
+                        "Chọn phòng",
+                        style: TextStyle(color: Colors.grey.shade600),
+                      ),
                     ),
                     isExpanded: true,
                     underline: SizedBox(),
-                    items: widget.lstPhong
-                        .where((phong) => phong.idCoSo == widget.idcoso)
-                        .map(
-                          (phong) => DropdownMenuItem(
-                            value: phong.idPhong,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(phong.tenPhong ?? 'Không tên'),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                    items:
+                        widget.lstPhong
+                            .where((phong) => phong.idCoSo == widget.idcoso)
+                            .map(
+                              (phong) => DropdownMenuItem(
+                                value: phong.idPhong,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  child: Text(phong.tenPhong ?? 'Không tên'),
+                                ),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       setState(() {
                         widget.idphong = value;
@@ -252,15 +277,16 @@ class __buildFilterBarState extends State<_buildFilterBar> {
                 ElevatedButton.icon(
                   onPressed: () {
                     setState(() {
-                      widget.lstKH = widget.lstKH
-                          .where(
-                            (tenant) =>
-                                (widget.idcoso == null ||
-                                    tenant.idCoSo == widget.idcoso) &&
-                                (widget.idphong == null ||
-                                    tenant.idPhong == widget.idphong),
-                          )
-                          .toList();
+                      widget.lstKH =
+                          widget.lstKH
+                              .where(
+                                (tenant) =>
+                                    (widget.idcoso == null ||
+                                        tenant.idCoSo == widget.idcoso) &&
+                                    (widget.idphong == null ||
+                                        tenant.idPhong == widget.idphong),
+                              )
+                              .toList();
                       widget.updateLstKHFilter(widget.lstKH);
                     });
                   },
@@ -381,7 +407,7 @@ class _QLKhachHangState extends State<QLKhachHang> {
       headers: {"Content-Type": "application/json"},
     );
     Future.delayed(Duration(seconds: 2));
-    print(response.statusCode);
+    print('status code getkh: ${response.statusCode}');
     print(response.body);
     if (response.statusCode == 200) {
       final dataReturn = json.decode(response.body);
@@ -441,7 +467,9 @@ class _QLKhachHangState extends State<QLKhachHang> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Text(
             tenant == null ? 'Thêm khách thuê' : 'Chi tiết khách thuê',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -472,7 +500,10 @@ class _QLKhachHangState extends State<QLKhachHang> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Thoát', style: TextStyle(color: Colors.grey.shade600)),
+              child: Text(
+                'Thoát',
+                style: TextStyle(color: Colors.grey.shade600),
+              ),
             ),
           ],
         );
@@ -480,7 +511,11 @@ class _QLKhachHangState extends State<QLKhachHang> {
     );
   }
 
-  Widget _buildDialogTextField(TextEditingController controller, String label, IconData icon) {
+  Widget _buildDialogTextField(
+    TextEditingController controller,
+    String label,
+    IconData icon,
+  ) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -512,7 +547,9 @@ class _QLKhachHangState extends State<QLKhachHang> {
           content: Text('Đánh dấu khách đã rời đi thành công'),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     } else {
@@ -521,7 +558,9 @@ class _QLKhachHangState extends State<QLKhachHang> {
           content: Text('Đánh dấu khách đã rời đi thất bại'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     }
@@ -537,7 +576,9 @@ class _QLKhachHangState extends State<QLKhachHang> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Text(
             'Thêm khách thuê',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -550,13 +591,36 @@ class _QLKhachHangState extends State<QLKhachHang> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildFormField(_nameController, 'Họ tên', Icons.person, 'Vui lòng nhập họ tên'),
+                    _buildFormField(
+                      _nameController,
+                      'Họ tên',
+                      Icons.person,
+                      'Vui lòng nhập họ tên',
+                    ),
                     SizedBox(height: 16),
-                    _buildFormField(_emailController, 'Email', Icons.email, 'Vui lòng nhập email', isEmail: true),
+                    _buildFormField(
+                      _emailController,
+                      'Email',
+                      Icons.email,
+                      'Vui lòng nhập email',
+                      isEmail: true,
+                    ),
                     SizedBox(height: 16),
-                    _buildFormField(_sdtController, 'Số điện thoại', Icons.phone, 'Vui lòng nhập số điện thoại', isPhone: true),
+                    _buildFormField(
+                      _sdtController,
+                      'Số điện thoại',
+                      Icons.phone,
+                      'Vui lòng nhập số điện thoại',
+                      isPhone: true,
+                    ),
                     SizedBox(height: 16),
-                    _buildFormField(_cccdController, 'CCCD', Icons.credit_card, 'Vui lòng nhập CCCD', isNumber: true),
+                    _buildFormField(
+                      _cccdController,
+                      'CCCD',
+                      Icons.credit_card,
+                      'Vui lòng nhập CCCD',
+                      isNumber: true,
+                    ),
                     SizedBox(height: 20),
                     _buildropdown(
                       idcoso: idcoso,
@@ -592,7 +656,9 @@ class _QLKhachHangState extends State<QLKhachHang> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue.shade600,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
               child: Text('Thêm'),
@@ -603,7 +669,15 @@ class _QLKhachHangState extends State<QLKhachHang> {
     );
   }
 
-  Widget _buildFormField(TextEditingController controller, String label, IconData icon, String errorMsg, {bool isEmail = false, bool isPhone = false, bool isNumber = false}) {
+  Widget _buildFormField(
+    TextEditingController controller,
+    String label,
+    IconData icon,
+    String errorMsg, {
+    bool isEmail = false,
+    bool isPhone = false,
+    bool isNumber = false,
+  }) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -621,7 +695,10 @@ class _QLKhachHangState extends State<QLKhachHang> {
           if (value == null || value.isEmpty) {
             return errorMsg;
           }
-          if (isEmail && !RegExp(r'^[a-zA-Z0-9._%+-/*]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
+          if (isEmail &&
+              !RegExp(
+                r'^[a-zA-Z0-9._%+-/*]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+              ).hasMatch(value)) {
             return 'Email không hợp lệ';
           }
           if ((isPhone || isNumber) && value.contains(RegExp(r'[a-zA-Z]'))) {
@@ -657,7 +734,9 @@ class _QLKhachHangState extends State<QLKhachHang> {
           content: Text('Thêm khách thành công'),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     } else {
@@ -667,7 +746,9 @@ class _QLKhachHangState extends State<QLKhachHang> {
             content: Text('lỗi'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         );
       }
@@ -700,7 +781,10 @@ class _QLKhachHangState extends State<QLKhachHang> {
               children: [
                 Text(
                   status,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 SizedBox(width: 8),
                 Switch(
@@ -724,195 +808,240 @@ class _QLKhachHangState extends State<QLKhachHang> {
           ),
         ],
       ),
-      body: isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(color: Colors.blue.shade600),
-                  SizedBox(height: 16),
-                  Text('Đang tải dữ liệu...', style: TextStyle(color: Colors.grey.shade600)),
-                ],
-              ),
-            )
-          : lstKH.isNotEmpty
-              ? Column(
+      body:
+          isLoading
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 2,
-                            blurRadius: 8,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Tìm kiếm theo tên',
-                          prefixIcon: Icon(Icons.search, color: Colors.blue.shade600),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    CircularProgressIndicator(color: Colors.blue.shade600),
+                    SizedBox(height: 16),
+                    Text(
+                      'Đang tải dữ liệu...',
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
+                  ],
+                ),
+              )
+              : lstKH.isNotEmpty
+              ? Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            _searchQuery = value.toLowerCase();
-                          });
-                        },
+                      ],
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Tìm kiếm theo tên',
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.blue.shade600,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value.toLowerCase();
+                        });
+                      },
                     ),
-                    _buildFilterBar(
-                      idcoso: idCoSoFilter,
-                      idphong: idPhongFilter,
-                      lstPhong: lstPhong,
-                      lstCoSo: lstCoSo,
-                      updateIdPhong: updateIdPhongFilter,
-                      lstKH: lstKH,
-                      updateLstKHFilter: updateLstKHFilter,
-                      updateIdCoSo: updateIdCoSoFilter,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: _searchQuery.isNotEmpty
-                            ? lstKH
-                                .where(
-                                  (u) => u.tenKh.toLowerCase().contains(
-                                    _searchQuery,
-                                  ),
-                                )
-                                .length
-                            : isChecked
-                                ? lstKHFilter.isEmpty
-                                    ? lstKH.where((u) => u.tinhTrang == 1).length
-                                    : lstKHFilter
-                                        .where((u) => u.tinhTrang == 1)
-                                        .length
-                                : lstKHFilter.isEmpty
-                                    ? lstKH.where((u) => u.tinhTrang == 0).length
-                                    : lstKHFilter
-                                        .where((u) => u.tinhTrang == 0)
-                                        .length,
-                        itemBuilder: (context, index) {
-                          final tenant = _searchQuery.isNotEmpty
+                  ),
+                  _buildFilterBar(
+                    idcoso: idCoSoFilter,
+                    idphong: idPhongFilter,
+                    lstPhong: lstPhong,
+                    lstCoSo: lstCoSo,
+                    updateIdPhong: updateIdPhongFilter,
+                    lstKH: lstKH,
+                    updateLstKHFilter: updateLstKHFilter,
+                    updateIdCoSo: updateIdCoSoFilter,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      itemCount:
+                          _searchQuery.isNotEmpty
                               ? lstKH
                                   .where(
                                     (u) => u.tenKh.toLowerCase().contains(
                                       _searchQuery,
                                     ),
                                   )
-                                  .toList()[index]
+                                  .length
                               : isChecked
-                                  ? lstKHFilter.isEmpty
-                                      ? lstKH
-                                          .where((u) => u.tinhTrang == 1)
-                                          .toList()[index]
-                                      : lstKHFilter
-                                          .where((u) => u.tinhTrang == 1)
-                                          .toList()[index]
-                                  : lstKHFilter.isEmpty
-                                      ? lstKH
-                                          .where((u) => u.tinhTrang == 0)
-                                          .toList()[index]
-                                      : lstKHFilter
-                                          .where((u) => u.tinhTrang == 1)
-                                          .toList()[index];
-                          return AnimatedOpacity(
-                            opacity: 1.0,
-                            duration: Duration(milliseconds: 300),
-                            child: Card(
-                              margin: EdgeInsets.symmetric(vertical: 6),
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: ListTile(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                title: Text(
-                                  tenant.tenKh,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  "Phòng: ${tenant.tenPhong} - Cơ sở: ${tenant.tenCoSo}",
-                                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      tenant.tinhTrang == 1 ? 'Đang thuê' : 'Đã rời đi',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: tenant.tinhTrang == 1 ? Colors.green : Colors.red,
+                              ? lstKHFilter.isEmpty
+                                  ? lstKH.where((u) => u.tinhTrang == 1).length
+                                  : lstKHFilter
+                                      .where((u) => u.tinhTrang == 1)
+                                      .length
+                              : lstKHFilter.isEmpty
+                              ? lstKH.where((u) => u.tinhTrang == 0).length
+                              : lstKHFilter
+                                  .where((u) => u.tinhTrang == 0)
+                                  .length,
+                      itemBuilder: (context, index) {
+                        final tenant =
+                            _searchQuery.isNotEmpty
+                                ? lstKH
+                                    .where(
+                                      (u) => u.tenKh.toLowerCase().contains(
+                                        _searchQuery,
                                       ),
-                                    ),
-                                    if (tenant.tinhTrang == 1)
-                                      IconButton(
-                                        icon: Icon(Icons.close, color: Colors.red),
-                                        onPressed: () => showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12)),
-                                              title: Text(
-                                                'Xác nhận',
-                                                style: TextStyle(
-                                                    fontSize: 20, fontWeight: FontWeight.w600),
-                                              ),
-                                              content: Text(
-                                                'Bạn có chắc chắn muốn đánh dấu khách này đã rời đi không?',
-                                                style: TextStyle(fontSize: 16),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () => Navigator.pop(context),
-                                                  child: Text(
-                                                    'Hủy',
-                                                    style: TextStyle(
-                                                        fontSize: 16, color: Colors.grey[600]),
-                                                  ),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () => _markTenantAsLeft(index),
-                                                  child: Text(
-                                                    'Đồng ý',
-                                                    style: TextStyle(
-                                                        fontSize: 16, color: Color(0xFF667eea)),
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                onTap: () => _showTenantDialog(tenant: tenant),
-                              ),
+                                    )
+                                    .toList()[index]
+                                : isChecked
+                                ? lstKHFilter.isEmpty
+                                    ? lstKH
+                                        .where((u) => u.tinhTrang == 1)
+                                        .toList()[index]
+                                    : lstKHFilter
+                                        .where((u) => u.tinhTrang == 1)
+                                        .toList()[index]
+                                : lstKHFilter.isEmpty
+                                ? lstKH
+                                    .where((u) => u.tinhTrang == 0)
+                                    .toList()[index]
+                                : lstKHFilter
+                                    .where((u) => u.tinhTrang == 1)
+                                    .toList()[index];
+                        return AnimatedOpacity(
+                          opacity: 1.0,
+                          duration: Duration(milliseconds: 300),
+                          child: Card(
+                            margin: EdgeInsets.symmetric(vertical: 6),
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          );
-                        },
-                      ),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              title: Text(
+                                tenant.tenKh,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              subtitle: Text(
+                                "Phòng: ${tenant.tenPhong} - Cơ sở: ${tenant.tenCoSo}",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    tenant.tinhTrang == 1
+                                        ? 'Đang thuê'
+                                        : 'Đã rời đi',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          tenant.tinhTrang == 1
+                                              ? Colors.green
+                                              : Colors.red,
+                                    ),
+                                  ),
+                                  if (tenant.tinhTrang == 1)
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed:
+                                          () => showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                title: Text(
+                                                  'Xác nhận',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  'Bạn có chắc chắn muốn đánh dấu khách này đã rời đi không?',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed:
+                                                        () => Navigator.pop(
+                                                          context,
+                                                        ),
+                                                    child: Text(
+                                                      'Hủy',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey[600],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed:
+                                                        () => _markTenantAsLeft(
+                                                          index,
+                                                        ),
+                                                    child: Text(
+                                                      'Đồng ý',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Color(
+                                                          0xFF667eea,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                    ),
+                                ],
+                              ),
+                              onTap: () => _showTenantDialog(tenant: tenant),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                )
-              : Center(
-                  child: Text(
-                    "Không có dữ liệu",
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   ),
+                ],
+              )
+              : Center(
+                child: Text(
+                  "Không có dữ liệu",
+                  style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                 ),
+              ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showdialogAddKH(),
         backgroundColor: Color(0xFF667eea),

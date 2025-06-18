@@ -44,7 +44,6 @@ class _ChiTietPhongState extends State<ChiTietPhong> {
         final resulft = jsonDecode(response.body);
         print(resulft);
         List<dynamic> data = resulft['khachHangs'];
-        khachThueList.clear();
 
         if (data.isEmpty) {
           setState(() {
@@ -62,11 +61,11 @@ class _ChiTietPhongState extends State<ChiTietPhong> {
             soLuong = resulft['soLuong'];
             tienPhong = resulft['tienPhong'];
             khachThueList.clear();
-            List<Map<String, dynamic>> phonglst =
+            khachThueList =
                 data.map((item) => item as Map<String, dynamic>).toList();
-            for (Map<String, dynamic> item in phonglst) {
-              khachThueList.add(item);
-            }
+
+            print('aaa');
+            print('listKH: ${khachThueList}');
             erroMessage = "";
             isLoading = false;
           });
@@ -91,6 +90,7 @@ class _ChiTietPhongState extends State<ChiTietPhong> {
     } catch (e) {}
   }
 
+  @override
   void initState() {
     super.initState();
     getInfoPhong();
